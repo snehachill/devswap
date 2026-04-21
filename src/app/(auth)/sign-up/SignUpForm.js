@@ -9,8 +9,8 @@ export default function SignUpForm() {
   const [state, formAction, isPending] = useActionState(registerUser, {});
 
   return (
-    <div className="w-full max-w-md rounded-[2rem] border border-slate-200/70 bg-white/90 p-8 shadow-[0_24px_80px_rgba(15,23,42,0.12)] backdrop-blur">
-      <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#7a5235]">Create account</p>
+    <div className="w-full max-w-md rounded-4xl border border-slate-200/70 bg-white/90 p-8 shadow-[0_24px_80px_rgba(15,23,42,0.12)] backdrop-blur">
+      <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#8C5A3C]">Create account</p>
       <h2 className="mt-4 font-serif text-4xl text-slate-900">Sign up</h2>
       <p className="mt-3 text-sm leading-6 text-slate-500">
         Set up your local DevSwap account so you can start publishing skills and joining swap matches.
@@ -21,7 +21,7 @@ export default function SignUpForm() {
           <input
             required
             autoComplete="name"
-            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#7a5235] focus:bg-white"
+            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#8C5A3C] focus:bg-white"
             name="name"
             type="text"
             placeholder="Sneha Tiwari"
@@ -32,7 +32,7 @@ export default function SignUpForm() {
           <input
             required
             autoComplete="email"
-            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#7a5235] focus:bg-white"
+            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#8C5A3C] focus:bg-white"
             name="email"
             type="email"
             placeholder="you@example.com"
@@ -44,7 +44,7 @@ export default function SignUpForm() {
             required
             minLength={6}
             autoComplete="new-password"
-            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#7a5235] focus:bg-white"
+            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#8C5A3C] focus:bg-white"
             name="password"
             type="password"
             placeholder="Choose a password"
@@ -54,7 +54,7 @@ export default function SignUpForm() {
           <span className="mb-2 block text-sm font-medium text-slate-700">Image URL (optional)</span>
           <input
             autoComplete="url"
-            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#7a5235] focus:bg-white"
+            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#8C5A3C] focus:bg-white"
             name="image"
             type="url"
             placeholder="https://example.com/avatar.jpg"
@@ -71,14 +71,14 @@ export default function SignUpForm() {
         <button
           type="submit"
           disabled={isPending}
-          className="w-full rounded-2xl bg-[#4f2f21] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#3f251a] disabled:cursor-not-allowed disabled:opacity-70"
+          className="w-full rounded-2xl bg-[#4B2E2B] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#8C5A3C] disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isPending ? "Creating your account..." : "Create account"}
         </button>
       </form>
       <p className="mt-6 text-sm text-slate-500">
         Already have an account?{" "}
-        <Link href="/sign-in" className="font-semibold text-[#7a5235] transition hover:text-[#4f2f21]">
+        <Link href="/sign-in" className="font-semibold text-[#8C5A3C] transition hover:text-[#4B2E2B]">
           Sign in here
         </Link>
       </p>

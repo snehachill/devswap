@@ -5,94 +5,90 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { Home, LogOut, LayoutDashboard, ChevronDown, Bell } from "lucide-react";
+import {
+  Menu,
+  X,
+  Search,
+  ShoppingBag,
+  LogOut,
+  LayoutDashboard,
+  User,
+  Home,
+  ChevronDown,
+} from "lucide-react";
 import { signOut } from "next-auth/react";
 
-const NAV_LINKS = ["How it works", "Features", "Community"];
+const NAV_LINKS = [
+  { label: "How It Works", href: "/#how" },
+  { label: "Features", href: "/#features" },
+  { label: "Community", href: "/#community" },
+];
 
-// ── Logo ───────────────────────────────────────────────────────────────────────
 function DevSwapLogo() {
   return (
-    <Link href="/" className="flex items-center gap-2.5 group">
-      <div className="relative w-8 h-8 rounded-xl bg-[#3D1F1F] flex items-center justify-center shadow-sm overflow-hidden">
-        <div className="absolute inset-0 bg-linear-to-br from-white/10 to-transparent pointer-events-none" />
-        <svg
-          width="15" height="15" viewBox="0 0 24 24"
-          fill="none" stroke="white" strokeWidth="2.5"
-          strokeLinecap="round" strokeLinejoin="round"
-          className="relative z-10"
-        >
-          <path d="M7 16l-4-4 4-4M17 8l4 4-4 4M14 4l-4 16" />
-        </svg>
-      </div>
+    <Link href="/" className="group inline-flex items-center gap-3">
       <span
-        className="font-bold text-slate-900 tracking-tight text-[15px] group-hover:text-[#3D1F1F] transition-colors duration-200"
-        style={{ fontFamily: "'DM Sans', sans-serif" }}
+        className="text-[1.55rem] font-normal tracking-[0.01em] text-[#4B2E2B] transition-colors duration-300"
+        style={{ fontFamily: "var(--font-dm-serif), serif" }}
       >
-        Dev<span className="text-[#7C3535]">Swap</span>
+        DevSwap
       </span>
+      <span className="h-2.5 w-2.5 rounded-full bg-[#C08552] transition-transform duration-300 group-hover:scale-110" />
     </Link>
   );
 }
 
-// ── Nav link with animated underline ──────────────────────────────────────────
-function NavLink({ label, active }) {
+function NavLink({ href, label, active, onClick }) {
   return (
-    <a
-      href="#"
-      className={`relative text-sm font-medium transition-colors duration-200 py-1 group ${
-        active ? "text-slate-900" : "text-slate-500 hover:text-slate-800"
+    <Link
+      href={href}
+      onClick={onClick}
+      className={`group relative inline-flex items-center py-2 text-xs font-medium uppercase tracking-[0.06em] transition-colors duration-300 ${
+        active ? "text-[#4B2E2B]" : "text-[#8C5A3C] hover:text-[#4B2E2B]"
       }`}
     >
       {label}
       <span
-        className={`absolute -bottom-0.5 left-0 h-px bg-[#7C3535] transition-all duration-300 ${
+        className={`absolute bottom-0 left-0 h-px bg-[#C08552] transition-all duration-300 ${
           active ? "w-full" : "w-0 group-hover:w-full"
         }`}
       />
-    </a>
+    </Link>
   );
 }
 
-// ── Notification bell ─────────────────────────────────────────────────────────
-function NotificationBell({ count = 2 }) {
+function IconButton({ label, children }) {
   return (
-    // suppressHydrationWarning → browser extensions inject fdprocessedid onto buttons
     <button
+      type="button"
+      aria-label={label}
       suppressHydrationWarning
-      className="relative p-2 rounded-xl hover:bg-slate-100 transition-colors duration-200 text-slate-500 hover:text-slate-800"
+      className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[#4B2E2B] transition-all duration-300 hover:bg-[rgba(192,133,82,0.14)] hover:text-[#4B2E2B]"
     >
-      <Bell size={17} />
-      {count > 0 && (
-        <motion.span
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          className="absolute top-1 right-1 w-4 h-4 bg-[#7C3535] text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none"
-        >
-          {count}
-        </motion.span>
-      )}
+      {children}
     </button>
   );
 }
 
-// ── Avatar ────────────────────────────────────────────────────────────────────
-function Avatar({ user, size = "md" }) {
-  const dim = size === "sm" ? "w-7 h-7 text-[10px]" : "w-8 h-8 text-xs";
+function Avatar({ user }) {
   const initials = user?.name
-    ? user.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
+    ? user.name
+        .split(" ")
+        .filter(Boolean)
+        .map((part) => part[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
     : "?";
 
   return (
-    <div
-      className={`${dim} rounded-full bg-linear-to-br from-[#7C3535] to-[#3D1F1F] flex items-center justify-center text-white font-bold overflow-hidden shrink-0 ring-2 ring-white`}
-    >
+    <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-[#4B2E2B] text-xs font-semibold text-[#FFF8F0]">
       {user?.image ? (
         <Image
           src={user.image}
           alt={user.name || "User"}
-          width={40}
-          height={40}
+          width={36}
+          height={36}
           className="h-full w-full object-cover"
         />
       ) : (
@@ -102,232 +98,261 @@ function Avatar({ user, size = "md" }) {
   );
 }
 
-// ── Dropdown item ─────────────────────────────────────────────────────────────
-function DropdownItem({ icon: Icon, label, href, onClick, variant = "default" }) {
-  const colors = {
-    default: "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
-    danger: "text-red-500 hover:bg-red-50 hover:text-red-600",
-  };
-  const cls = `w-full flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors duration-150 ${colors[variant]}`;
+function DropdownItem({ icon: Icon, label, href, onClick, danger = false }) {
+  const className = `flex w-full items-center gap-2.5 rounded-2xl px-3 py-2.5 text-sm transition-colors duration-300 ${
+    danger
+      ? "text-[#8C5A3C] hover:bg-[rgba(192,133,82,0.12)] hover:text-[#4B2E2B]"
+      : "text-[#8C5A3C] hover:bg-[rgba(192,133,82,0.12)] hover:text-[#4B2E2B]"
+  }`;
 
   if (href) {
     return (
-      <Link href={href} onClick={onClick} className={cls}>
-        <Icon size={15} strokeWidth={2} className="shrink-0 opacity-70" />
+      <Link href={href} onClick={onClick} className={className}>
+        <Icon size={16} />
         {label}
       </Link>
     );
   }
 
   return (
-    // suppressHydrationWarning → extension attributes (fdprocessedid) on buttons
-    <button suppressHydrationWarning onClick={onClick} className={cls}>
-      <Icon size={15} strokeWidth={2} className="shrink-0 opacity-70" />
+    <button
+      type="button"
+      suppressHydrationWarning
+      onClick={onClick}
+      className={className}
+    >
+      <Icon size={16} />
       {label}
     </button>
   );
 }
 
-// ── User dropdown panel ───────────────────────────────────────────────────────
 function UserDropdown({ session, onClose }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8, scale: 0.97 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 8, scale: 0.97 }}
-      transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-      className="absolute right-0 top-full mt-2.5 w-56 bg-white border border-slate-200/80 rounded-2xl shadow-xl shadow-slate-200/60 overflow-hidden z-60"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 8 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="absolute right-0 top-full mt-3 w-64 rounded-3xl border border-[rgba(140,90,60,0.12)] bg-[rgba(255,248,240,0.96)] p-3 shadow-[0_18px_50px_rgba(75,46,43,0.10)] backdrop-blur-xl"
     >
-      {/* Identity header */}
-      <div className="flex items-center gap-3 px-4 py-3.5 border-b border-slate-100 bg-slate-50/70">
+      <div className="flex items-center gap-3 rounded-[20px] bg-white/60 px-3 py-3">
         <Avatar user={session.user} />
         <div className="min-w-0">
-          <p className="text-[13px] font-semibold text-slate-900 truncate leading-tight">
+          <p className="truncate text-sm font-medium text-[#4B2E2B]">
             {session.user.name}
           </p>
-          <p className="text-[11px] text-slate-400 truncate leading-tight mt-0.5">
-            {session.user.email}
-          </p>
+          <p className="truncate text-xs text-[#8C5A3C]">{session.user.email}</p>
         </div>
       </div>
 
-      {/* Menu items */}
-      <div className="py-1.5">
+      <div className="mt-3 flex flex-col gap-1">
         <DropdownItem icon={LayoutDashboard} label="Dashboard" href="/user/dashboard" onClick={onClose} />
+        <DropdownItem icon={User} label="Profile" href="/user/profile" onClick={onClose} />
         <DropdownItem icon={Home} label="Home" href="/" onClick={onClose} />
       </div>
 
-      {/* Sign out */}
-      <div className="border-t border-slate-100 py-1.5">
+      <div className="mt-3 border-t border-[rgba(140,90,60,0.12)] pt-3">
         <DropdownItem
           icon={LogOut}
-          label="Sign out"
-          onClick={() => { onClose(); signOut(); }}
-          variant="danger"
+          label="Sign Out"
+          danger
+          onClick={() => {
+            onClose();
+            signOut();
+          }}
         />
       </div>
     </motion.div>
   );
 }
 
-// ── Mobile menu ───────────────────────────────────────────────────────────────
-function MobileMenu({ session, open }) {
+function MobileMenu({ open, session, onClose }) {
   return (
     <AnimatePresence>
-      {open && (
+      {open ? (
         <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-          className="md:hidden overflow-hidden border-t border-slate-100 bg-white/95 backdrop-blur-xl"
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          className="border-t border-[rgba(140,90,60,0.12)] bg-[rgba(255,248,240,0.94)] px-5 pb-5 pt-4 backdrop-blur-[18px] md:hidden"
         >
-          <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-1">
+          <nav className="flex flex-col gap-1">
             {NAV_LINKS.map((item) => (
-              <a
-                key={item}
-                href="#"
-                className="text-sm text-slate-600 hover:text-slate-900 font-medium py-2.5 border-b border-slate-50 last:border-0 transition-colors"
-              >
-                {item}
-              </a>
+              <NavLink
+                key={item.label}
+                href={item.href}
+                label={item.label}
+                active={false}
+                onClick={onClose}
+              />
             ))}
-            {!session && (
-              <div className="flex flex-col gap-2 mt-3 pt-3 border-t border-slate-100">
+          </nav>
+
+          <div className="mt-5 flex items-center gap-2">
+            <IconButton label="Search">
+              <Search size={17} strokeWidth={1.9} />
+            </IconButton>
+            <IconButton label="Cart">
+              <ShoppingBag size={17} strokeWidth={1.9} />
+            </IconButton>
+          </div>
+
+          <div className="mt-5 flex flex-col gap-3">
+            {session ? (
+              <>
                 <Link
-                  href="/sign-in"
-                  className="text-sm text-center py-2.5 border border-slate-200 rounded-xl text-slate-700 font-medium hover:bg-slate-50 transition-colors"
+                  href="/user/dashboard"
+                  onClick={onClose}
+                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#4B2E2B] px-5 text-sm font-medium text-[#FFF8F0] transition-all duration-300 hover:-translate-y-px hover:bg-[#4B2E2B]"
                 >
-                  Sign in
+                  Go To Dashboard
                 </Link>
+                <Link
+                  href="/user/profile"
+                  onClick={onClose}
+                  className="text-sm uppercase tracking-[0.06em] text-[#8C5A3C] transition-colors duration-300 hover:text-[#4B2E2B]"
+                >
+                  Profile
+                </Link>
+              </>
+            ) : (
+              <>
                 <Link
                   href="/sign-up"
-                  className="text-sm text-center py-2.5 bg-[#3D1F1F] rounded-xl text-white font-semibold hover:bg-[#2d1616] transition-colors"
+                  onClick={onClose}
+                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#4B2E2B] px-5 text-sm font-medium text-[#FFF8F0] transition-all duration-300 hover:-translate-y-px hover:bg-[#4B2E2B]"
                 >
-                  Get started
+                  Get Started
                 </Link>
-              </div>
+                <Link
+                  href="/sign-in"
+                  onClick={onClose}
+                  className="text-sm uppercase tracking-[0.06em] text-[#8C5A3C] transition-colors duration-300 hover:text-[#4B2E2B]"
+                >
+                  Sign In
+                </Link>
+              </>
             )}
           </div>
         </motion.div>
-      )}
+      ) : null}
     </AnimatePresence>
   );
 }
 
-// ── Main Navbar ───────────────────────────────────────────────────────────────
-export default function Navbar({ session, activeLink = "" }) {
+export default function Navbar({ session }) {
   const pathname = usePathname();
-  const [scrolled,     setScrolled]     = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [mobileOpen,   setMobileOpen]   = useState(false);
   const dropdownRef = useRef(null);
 
-  // Scroll detection
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 32);
-    window.addEventListener("scroll", fn, { passive: true });
-    return () => window.removeEventListener("scroll", fn);
-  }, []);
-
-  // Close dropdown on outside click
-  useEffect(() => {
-    const handler = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowDropdown(false);
       }
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Close mobile menu on desktop resize
   useEffect(() => {
-    const fn = () => { if (window.innerWidth >= 768) setMobileOpen(false); };
-    window.addEventListener("resize", fn);
-    return () => window.removeEventListener("resize", fn);
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setMobileOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Don't show navbar on auth pages
   if (pathname?.includes("/sign-in") || pathname?.includes("/sign-up")) {
     return null;
   }
 
+  const glassActive = true;
+
   return (
     <motion.header
-      initial={{ y: -24, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed top-0 left-0 right-0 z-50"
-      style={{ fontFamily: "'DM Sans', sans-serif" }}
+      initial={{ opacity: 0, y: -18 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="fixed inset-x-0 top-0 z-50"
+      style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
     >
-      {/* ── Main bar ── */}
       <div
-        className={`transition-all duration-300 ${
-          scrolled || mobileOpen
-            ? "bg-white/92 backdrop-blur-xl border-b border-slate-200/70 shadow-sm shadow-slate-100/80"
-            : "bg-transparent"
-        }`}
+        className="transition-all duration-300 ease-out"
+        style={{
+          background: glassActive ? "rgba(255, 255, 255, 0.72)" : "transparent",
+          backdropFilter: glassActive ? "blur(18px)" : "none",
+          WebkitBackdropFilter: glassActive ? "blur(18px)" : "none",
+          borderBottom: glassActive ? "1px solid rgba(140, 90, 60, 0.12)" : "1px solid transparent",
+          boxShadow: glassActive ? "0 10px 30px rgba(75, 46, 43, 0.07)" : "none",
+        }}
       >
-        <div className="max-w-6xl mx-auto px-5 sm:px-6 py-3.5 flex items-center justify-between gap-4">
+        <div className="mx-auto flex h-17 max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-12">
+          <div className="flex min-w-0 items-center">
+            <DevSwapLogo />
+          </div>
 
-          {/* Logo */}
-          <DevSwapLogo />
-
-          {/* Desktop nav links */}
-          <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+          <nav className="hidden items-center gap-8 md:flex">
             {NAV_LINKS.map((item) => (
-              <NavLink key={item} label={item} active={activeLink === item} />
+              <NavLink
+                key={item.label}
+                href={item.href}
+                label={item.label}
+                active={pathname === item.href}
+              />
             ))}
           </nav>
 
-          {/* Right section */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
+            <div className="hidden items-center gap-1 sm:flex">
+              <IconButton label="Search">
+                <Search size={17} strokeWidth={1.9} />
+              </IconButton>
+              <IconButton label="Cart">
+                <ShoppingBag size={17} strokeWidth={1.9} />
+              </IconButton>
+            </div>
+
             {session ? (
               <>
-                {/* Bell — hidden on mobile */}
-                <div className="hidden sm:block">
-                  <NotificationBell count={2} />
-                </div>
+                <Link
+                  href="/user/requests"
+                  className="hidden min-h-10 items-center rounded-full bg-[#8C5A3C] px-5 text-sm font-medium text-[#FFF8F0] transition-all duration-300 hover:-translate-y-px hover:bg-[#8C5A3C] sm:inline-flex"
+                >
+                  Requests
+                </Link>
 
-                {/* User menu */}
-                <div ref={dropdownRef} className="relative">
-                  {/*
-                    suppressHydrationWarning fixes:
-                    Browser extensions (LastPass, Grammarly, etc.) inject
-                    fdprocessedid onto <button> elements client-side.
-                    This causes a server/client HTML mismatch in Next.js SSR.
-                    suppressHydrationWarning tells React to ignore attribute
-                    differences on this element only — safe and surgical.
-                  */}
+                <Link
+                  href="/user/discover"
+                  className="hidden min-h-10 items-center rounded-full bg-[#4B2E2B] px-5 text-sm font-medium text-[#FFF8F0] transition-all duration-300 hover:-translate-y-px hover:bg-[#4B2E2B] sm:inline-flex"
+                >
+                  Discover
+                </Link>
+
+                <div ref={dropdownRef} className="relative hidden sm:block">
                   <button
+                    type="button"
                     suppressHydrationWarning
-                    onClick={() => setShowDropdown((v) => !v)}
-                    className={`flex items-center gap-2 pl-1.5 pr-2.5 py-1.5 rounded-full border transition-all duration-200 ${
-                      showDropdown
-                        ? "border-slate-300 bg-slate-50 shadow-sm"
-                        : "border-slate-200 hover:border-slate-300 hover:bg-slate-50"
-                    }`}
+                    onClick={() => setShowDropdown((value) => !value)}
+                    className="inline-flex items-center gap-2 rounded-full px-1.5 py-1 transition-all duration-300 hover:bg-[rgba(192,133,82,0.10)]"
                   >
                     <Avatar user={session.user} />
-                    <span className="text-[13px] font-semibold text-slate-700 hidden sm:block max-w-20 truncate">
-                      {session.user.name?.split(" ")[0]}
-                    </span>
-                    <motion.div
-                      animate={{ rotate: showDropdown ? 180 : 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <ChevronDown size={14} strokeWidth={2.5} className="text-slate-400" />
-                    </motion.div>
+                    <ChevronDown size={15} className="text-[#8C5A3C]" />
                   </button>
 
                   <AnimatePresence>
-                    {showDropdown && (
-                      <UserDropdown
-                        session={session}
-                        onClose={() => setShowDropdown(false)}
-                      />
-                    )}
+                    {showDropdown ? (
+                      <UserDropdown session={session} onClose={() => setShowDropdown(false)} />
+                    ) : null}
                   </AnimatePresence>
                 </div>
               </>
@@ -335,49 +360,33 @@ export default function Navbar({ session, activeLink = "" }) {
               <>
                 <Link
                   href="/sign-in"
-                  className="hidden sm:block text-sm text-slate-600 hover:text-slate-900 font-medium transition-colors duration-200 px-2 py-1"
+                  className="hidden text-xs font-medium uppercase tracking-[0.06em] text-[#8C5A3C] transition-colors duration-300 hover:text-[#4B2E2B] sm:inline-flex"
                 >
-                  Sign in
+                  Sign In
                 </Link>
                 <Link
                   href="/sign-up"
-                  className="relative text-sm px-5 py-2.5 rounded-full bg-[#3D1F1F] text-white font-semibold overflow-hidden group transition-all duration-200 active:scale-95 shadow-sm"
+                  className="hidden min-h-10 items-center rounded-full bg-[#4B2E2B] px-5 text-sm font-medium text-[#FFF8F0] transition-all duration-300 hover:-translate-y-px hover:bg-[#4B2E2B] sm:inline-flex"
                 >
-                  <span className="relative z-10">Get started</span>
-                  <span className="absolute inset-0 bg-[#2d1616] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                  Get Started
                 </Link>
               </>
             )}
 
-            {/* Mobile hamburger */}
             <button
+              type="button"
               suppressHydrationWarning
-              onClick={() => setMobileOpen((v) => !v)}
-              aria-label="Toggle menu"
-              className="md:hidden flex flex-col justify-center items-center w-9 h-9 gap-1.25 rounded-xl hover:bg-slate-100 transition-colors ml-1"
+              onClick={() => setMobileOpen((value) => !value)}
+              aria-label="Toggle navigation"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[#4B2E2B] transition-all duration-300 hover:bg-[rgba(192,133,82,0.14)] md:hidden"
             >
-              <motion.span
-                animate={mobileOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
-                transition={{ duration: 0.22 }}
-                className="block w-5 h-0.5 bg-slate-700 rounded-full origin-center"
-              />
-              <motion.span
-                animate={mobileOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
-                transition={{ duration: 0.18 }}
-                className="block w-5 h-0.5 bg-slate-700 rounded-full"
-              />
-              <motion.span
-                animate={mobileOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
-                transition={{ duration: 0.22 }}
-                className="block w-5 h-0.5 bg-slate-700 rounded-full origin-center"
-              />
+              {mobileOpen ? <X size={19} /> : <Menu size={19} />}
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Mobile menu */}
-      <MobileMenu session={session} open={mobileOpen} />
+        <MobileMenu open={mobileOpen} session={session} onClose={() => setMobileOpen(false)} />
+      </div>
     </motion.header>
   );
 }
