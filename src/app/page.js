@@ -65,8 +65,8 @@ function HeroSection() {
           opacity: 0.5,
         }}
       />
-      <div className="absolute inset-0 bg-linear-to-b from-[#FFF8F0] via-transparent to-[#FFF8F0] pointer-events-none" />
-      <div className="absolute inset-0 bg-linear-to-r from-[#FFF8F0] via-transparent to-[#FFF8F0] pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#FFF8F0] via-transparent to-[#FFF8F0] pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#FFF8F0] via-transparent to-[#FFF8F0] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/3 w-100 h-100 rounded-full bg-[#C08552]/10 blur-[80px] opacity-50 pointer-events-none" />
 
       <motion.div style={{ y, opacity }} className="relative z-10 text-center max-w-4xl mx-auto px-6 pt-28">
@@ -127,7 +127,7 @@ function HeroSection() {
         <motion.div
           animate={{ y: [0, 7, 0] }}
           transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          className="w-px h-10 bg-linear-to-b from-slate-300 to-transparent mx-auto"
+          className="w-px h-10 bg-gradient-to-b from-slate-300 to-transparent mx-auto"
         />
       </motion.div>
     </section>
