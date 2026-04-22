@@ -255,7 +255,7 @@ function SkillCloud() {
 function Testimonials() {
   const quotes = [
     { text: "Taught React, learned Figma in 2 weeks. Best decision ever.", name: "Arjun K.", role: "3rd year, CSE" },
-    { text: "Found a ML mentor by offering my Python skills. This is genius.", name: "Priya M.", role: "4th year, IT" },
+    { text: "Found a ML mentor by offering my Python skills. This is genius and fablous.", name: "Priya M.", role: "4th year, IT" },
     { text: "DevSwap replaced a ₹5000 Udemy course for me. No joke.", name: "Rahul S.", role: "2nd year, CSE" },
   ];
 
