@@ -19,22 +19,22 @@ function getInitials(name = "") {
 }
 
 function avatarTone(direction, status) {
-  if (status === "active") return "bg-[#e9f3e6] text-[#3a6e2e]";
+  if (status === "active") return "bg-[#99ad7a]/20 text-[#99ad7a]";
   if (["completed", "cancelled", "declined"].includes(status)) {
-    return "bg-[#eaeaea] text-[#666]";
+    return "bg-slate-100 text-slate-500";
   }
   return direction === "incoming"
-    ? "bg-[#f5e6cf] text-[#8C5A3C]"
-    : "bg-[#f8e9e4] text-[#a55a2f]";
+    ? "bg-[#546b41]/20 text-[#546b41]"
+    : "bg-[#99ad7a]/20 text-[#99ad7a]";
 }
 
 function badgeStyle(status) {
-  if (status === "active") return "bg-[#e9f3e6] border-[#b8d9b0] text-[#3a6e2e]";
-  if (status === "completed") return "bg-[#e6f0fb] border-[#b5cce8] text-[#2a5a8c]";
+  if (status === "active") return "bg-[#99ad7a]/20 border-[#99ad7a]/30 text-[#99ad7a]";
+  if (status === "completed") return "bg-[#546b41]/20 border-[#546b41]/30 text-[#546b41]";
   if (status === "cancelled" || status === "declined") {
-    return "bg-[#f3eaea] border-[#e0b8b8] text-[#8c3a3a]";
+    return "bg-rose-100 border-rose-200 text-rose-700";
   }
-  return "bg-[#f7efe4] border-[#e4d5bd] text-[#8C5A3C]";
+  return "bg-[#dcccac]/10 border-[#dcccac]/20 text-[#dcccac]";
 }
 
 const cardVariants = {
@@ -65,8 +65,8 @@ function AvatarBadge({ name, direction, status }) {
 function RequestAction({ action, request, isBusy, onAction }) {
   const className = `flex items-center gap-2 rounded-xl px-5 py-2 text-[0.84rem] font-medium transition-colors ${
     action.primary
-      ? "bg-[#3b2a1a] text-[#fff8f0] hover:bg-[#2f2115]"
-      : "border border-[#b9aa95] bg-transparent text-[#3b2a1a] hover:bg-[#f5ede3]"
+      ? "bg-[#546b41] text-white hover:bg-[#3d4f2f]"
+      : "border border-[#546b41]/30 bg-transparent text-[#546b41] hover:bg-[#546b41]/10"
   }`;
 
   if (action.href) {
@@ -113,7 +113,7 @@ function RequestCard({ request, actions, pendingId, onAction, index }) {
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="rounded-[20px] border border-[#d9ccb8] bg-[#fffdf9] px-5 py-5 shadow-[0_2px_12px_rgba(60,35,10,0.05)]"
+      className="rounded-[20px] border border-indigo-100 bg-white px-5 py-5 shadow-[0_2px_12px_rgba(79,70,229,0.08)]"
     >
       <div className="flex flex-col gap-4">
         <div className="flex items-start gap-4">
@@ -125,7 +125,7 @@ function RequestCard({ request, actions, pendingId, onAction, index }) {
 
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="text-[1.1rem] font-medium leading-tight text-[#3b2a1a]">
+              <h3 className="text-[1.1rem] font-medium leading-tight text-slate-900">
                 {request.otherUser.name}
               </h3>
               <span
@@ -135,20 +135,20 @@ function RequestCard({ request, actions, pendingId, onAction, index }) {
               </span>
             </div>
 
-            <p className="mt-1 text-[0.93rem] text-[#7a6550]">
-              Offers <span className="font-medium text-[#5a3e28]">{request.teachSkillOffered}</span>
+            <p className="mt-1 text-[0.93rem] text-slate-500">
+              Offers <span className="font-medium text-indigo-700">{request.teachSkillOffered}</span>
               {" · "}
-              Wants <span className="font-medium text-[#5a3e28]">{request.learnSkillRequested}</span>
+              Wants <span className="font-medium text-cyan-700">{request.learnSkillRequested}</span>
             </p>
 
             {request.otherUser.headline ? (
-              <p className="mt-0.5 text-[0.8rem] text-[#9a846e]">
+              <p className="mt-0.5 text-[0.8rem] text-slate-500">
                 {request.otherUser.headline}
               </p>
             ) : null}
 
             {request.message ? (
-              <p className="mt-3 rounded-xl bg-[#f7f1e8] px-3 py-2 text-[0.82rem] leading-relaxed text-[#6b5a48]">
+              <p className="mt-3 rounded-xl bg-indigo-50 px-3 py-2 text-[0.82rem] leading-relaxed text-slate-600">
                 {request.message}
               </p>
             ) : null}
@@ -176,7 +176,7 @@ function RequestCard({ request, actions, pendingId, onAction, index }) {
 function RequestsSection({ title, items, empty, actions, pendingId, onAction }) {
   return (
     <section className="space-y-3">
-      <h2 className="text-[1.35rem] font-medium tracking-tight text-[#3b2a1a]">
+      <h2 className="text-[1.35rem] font-medium tracking-tight text-slate-900">
         {title}
       </h2>
 
@@ -197,7 +197,7 @@ function RequestsSection({ title, items, empty, actions, pendingId, onAction }) 
             key="empty"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="rounded-[20px] border border-dashed border-[#d9ccb8] bg-[#fffdf9] px-5 py-8 text-center text-[0.87rem] text-[#8b7763]"
+            className="rounded-[20px] border border-dashed border-[#dcccac]/30 bg-white px-5 py-8 text-center text-[0.87rem] text-slate-500"
           >
             {empty}
           </motion.div>
@@ -221,25 +221,25 @@ export default function RequestsClient({ requests }) {
       if (result.success) {
         toast.success(result.message, {
           style: {
-            background: "#3b2a1a",
-            color: "#fff8f0",
+            background: "#4338ca",
+            color: "#ffffff",
             borderRadius: "12px",
             fontSize: "0.86rem",
-            boxShadow: "0 4px 20px rgba(60,35,10,0.18)",
+            boxShadow: "0 4px 20px rgba(67,56,202,0.2)",
           },
-          iconTheme: { primary: "#6ec87a", secondary: "#3b2a1a" },
+          iconTheme: { primary: "#06b6d4", secondary: "#4338ca" },
         });
         router.refresh();
       } else {
         toast.error(result.error || "Unable to update request.", {
           style: {
-            background: "#3b2a1a",
-            color: "#fff8f0",
+            background: "#4338ca",
+            color: "#ffffff",
             borderRadius: "12px",
             fontSize: "0.86rem",
-            boxShadow: "0 4px 20px rgba(60,35,10,0.18)",
+            boxShadow: "0 4px 20px rgba(67,56,202,0.2)",
           },
-          iconTheme: { primary: "#e27272", secondary: "#3b2a1a" },
+          iconTheme: { primary: "#fb7185", secondary: "#4338ca" },
         });
       }
 
@@ -251,7 +251,7 @@ export default function RequestsClient({ requests }) {
     <>
       <Toaster position="top-right" />
 
-      <main className="min-h-screen bg-[#FFF8F0] px-4 pb-20 pt-28 sm:px-6 lg:px-8">
+      <main className="min-h-screen bg-transparent px-4 pb-20 pt-28 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl space-y-10">
           <RequestsSection
             title="Incoming requests"

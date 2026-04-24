@@ -38,8 +38,8 @@ export default function SignInForm() {
   }
 
   return (
-    <div className="w-full max-w-md rounded-4xl border border-slate-200/70 bg-white/90 p-8 shadow-[0_24px_80px_rgba(15,23,42,0.12)] backdrop-blur">
-      <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#8C5A3C]">Welcome back</p>
+    <div className="w-full max-w-md rounded-4xl border border-[#dcccac]/20 bg-white/90 p-8 shadow-[0_24px_80px_rgba(84,107,65,0.15)] backdrop-blur">
+      <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#546b41]">Welcome back</p>
       <h2 className="mt-4 font-serif text-4xl text-slate-900">Sign in</h2>
       <p className="mt-3 text-sm leading-6 text-slate-500">
         Access your DevSwap profile and continue matching with students who can trade skills with you.
@@ -50,7 +50,7 @@ export default function SignInForm() {
           <input
             required
             autoComplete="email"
-            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#8C5A3C] focus:bg-white"
+            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#546b41] focus:bg-white focus:ring-2 focus:ring-[#546b41]/10"
             name="email"
             type="email"
             value={form.email}
@@ -63,7 +63,7 @@ export default function SignInForm() {
           <input
             required
             autoComplete="current-password"
-            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#8C5A3C] focus:bg-white"
+            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#546b41] focus:bg-white focus:ring-2 focus:ring-[#546b41]/10"
             name="password"
             type="password"
             value={form.password}
@@ -77,14 +77,14 @@ export default function SignInForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-2xl bg-[#4B2E2B] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#8C5A3C] disabled:cursor-not-allowed disabled:opacity-70"
+          className="w-full rounded-2xl bg-[#546b41] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#3d4f2f] disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isSubmitting ? "Signing you in..." : "Sign in"}
         </button>
       </form>
       <p className="mt-6 text-sm text-slate-500">
         New to DevSwap?{" "}
-        <Link href="/sign-up" className="font-semibold text-[#8C5A3C] transition hover:text-[#4B2E2B]">
+        <Link href="/sign-up" className="font-semibold text-[#546b41] transition hover:text-[#3d4f2f]">
           Create an account
         </Link>
       </p>

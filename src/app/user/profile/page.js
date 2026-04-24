@@ -33,9 +33,9 @@ const normalizeImageUrl = (value = "") => {
 
 function Chip({ children, tone = "default" }) {
   const tones = {
-    default: "bg-[#f6ede2] border-[#ead8c1] text-[#6b4226]",
-    teach: "bg-[#fcf1dc] border-[#e2c58c] text-[#7a4b12]",
-    learn: "bg-[#f0e9fb] border-[#d4c3ea] text-[#5f447f]",
+    default: "bg-[#dcccac]/10 border-[#dcccac]/20 text-[#dcccac]",
+    teach: "bg-[#99ad7a]/10 border-[#99ad7a]/20 text-[#99ad7a]",
+    learn: "bg-[#546b41]/10 border-[#546b41]/20 text-[#546b41]",
   };
 
   return <span className={`inline-flex rounded-full border px-3 py-1.5 text-sm font-semibold ${tones[tone]}`}>{children}</span>;
@@ -184,17 +184,17 @@ export default function ProfilePage() {
   }
 
   if (pageLoading) {
-    return <div className="min-h-[80vh] bg-[#f7f0e6] pt-12" />;
+    return <div className="min-h-[80vh] bg-transparent pt-12" />;
   }
 
   return (
     <>
       <Toaster position="top-right" />
 
-      <div className="relative min-h-[90vh] overflow-hidden bg-[#f7f0e6] bg-[radial-gradient(ellipse_80%_60%_at_20%_10%,rgba(200,169,126,0.18)_0%,transparent_60%),radial-gradient(ellipse_60%_50%_at_80%_90%,rgba(122,79,45,0.10)_0%,transparent_55%)] px-5 pb-5 pt-24 md:px-10 md:pb-10 md:pt-24" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <div className="relative min-h-[90vh] overflow-hidden bg-transparent bg-[radial-gradient(ellipse_80%_60%_at_20%_10%,rgba(84,107,65,0.13)_0%,transparent_60%),radial-gradient(ellipse_60%_50%_at_80%_90%,rgba(153,173,122,0.12)_0%,transparent_55%)] px-5 pb-5 pt-24 md:px-10 md:pb-10 md:pt-24" style={{ fontFamily: "'DM Sans', sans-serif" }}>
         <motion.div className="relative z-10 mx-auto max-w-[1200px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
           <motion.section
-            className="mb-8 overflow-hidden rounded-[28px] border border-[#ddd0b8] bg-white shadow-[0_10px_45px_rgba(60,35,10,0.14)]"
+            className="mb-8 overflow-hidden rounded-[28px] border border-[#dcccac]/20 bg-white shadow-[0_10px_45px_rgba(84,107,65,0.14)]"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -211,7 +211,7 @@ export default function ProfilePage() {
                   : undefined
               }
             >
-              <button type="button" onClick={() => avatarInputRef.current?.focus()} className="absolute right-4 top-4 inline-flex rounded-full border border-white/70 bg-[rgba(255,248,240,0.8)] px-3 py-2 text-sm font-semibold text-[#4B2E2B] shadow-[0_8px_18px_rgba(75,46,43,0.12)] transition-all duration-200 hover:scale-105">
+              <button type="button" onClick={() => avatarInputRef.current?.focus()} className="absolute right-4 top-4 inline-flex rounded-full border border-[#dcccac]/70 bg-[#dcccac]/80 px-3 py-2 text-sm font-semibold text-[#546b41] shadow-[0_8px_18px_rgba(84,107,65,0.12)] transition-all duration-200 hover:scale-105">
                 Edit
               </button>
             </div>
@@ -232,8 +232,8 @@ export default function ProfilePage() {
                     <p className="mt-1 text-lg text-[#7a6550]">{profile?.headline || "Add your professional headline"}</p>
                     <p className="mt-1 text-base text-[#8b5e3c]">{profile?.location || "Add your location"}</p>
                     <div className="mt-4 flex flex-wrap gap-3">
-                      <button type="button" className="rounded-full bg-[#3b2a1a] px-5 py-2.5 text-sm font-semibold text-[#fdf6ec] shadow-[0_8px_18px_rgba(59,42,26,0.18)] transition-all duration-200 hover:-translate-y-px">Edit Profile</button>
-                      <button type="button" className="rounded-full border border-[#8b5e3c] bg-white px-5 py-2.5 text-sm font-semibold text-[#6b4226] transition-all duration-200 hover:-translate-y-px hover:bg-[#fbf4ea]">Settings</button>
+                      <button type="button" className="rounded-full bg-[#546b41] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_8px_18px_rgba(84,107,65,0.18)] transition-all duration-200 hover:-translate-y-px">Edit Profile</button>
+                      <button type="button" className="rounded-full border border-[#99ad7a]/30 bg-white px-5 py-2.5 text-sm font-semibold text-[#546b41] transition-all duration-200 hover:-translate-y-px hover:bg-[#99ad7a]/10">Settings</button>
                     </div>
                   </div>
                 </div>
@@ -276,25 +276,25 @@ export default function ProfilePage() {
               <section className="rounded-xl border border-[#ddd0b8] bg-white p-6 shadow-[0_4px_20px_rgba(60,35,10,0.10)]">
                 <h2 className="mb-4 border-b border-[#ddd0b8] pb-3 text-base font-bold text-[#3b2a1a]" style={{ fontFamily: "'Libre Baskerville', serif" }}>Cover Photo</h2>
                 <form onSubmit={handleCoverSubmit}>
-                  <input className="w-full rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#8b5e3c] focus:bg-white" type="url" placeholder="https://example.com/cover.jpg" value={coverImage} onChange={(event) => setCoverImage(event.target.value)} maxLength={2048} />
-                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-gradient-to-r from-[#3b2a1a] to-[#8b5e3c] px-3 py-2 text-sm font-bold text-[#fdf6ec]" disabled={coverLoading}>{coverLoading ? "Saving..." : "Update Cover Photo"}</motion.button>
+                  <input className="w-full rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#546b41] focus:bg-white" type="url" placeholder="https://example.com/cover.jpg" value={coverImage} onChange={(event) => setCoverImage(event.target.value)} maxLength={2048} />
+                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-[#546b41] px-3 py-2 text-sm font-bold text-white" disabled={coverLoading}>{coverLoading ? "Saving..." : "Update Cover Photo"}</motion.button>
                 </form>
               </section>
 
               <section className="rounded-xl border border-[#ddd0b8] bg-white p-6 shadow-[0_4px_20px_rgba(60,35,10,0.10)]">
                 <h2 className="mb-4 border-b border-[#ddd0b8] pb-3 text-base font-bold text-[#3b2a1a]" style={{ fontFamily: "'Libre Baskerville', serif" }}>Profile Photo</h2>
                 <form onSubmit={handleAvatarSubmit}>
-                  <input ref={avatarInputRef} className="w-full rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#8b5e3c] focus:bg-white" type="url" placeholder="https://example.com/photo.jpg" value={image} onChange={(event) => setImage(event.target.value)} maxLength={2048} />
-                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-gradient-to-r from-[#3b2a1a] to-[#8b5e3c] px-3 py-2 text-sm font-bold text-[#fdf6ec]" disabled={avatarLoading}>{avatarLoading ? "Saving..." : "Update Photo"}</motion.button>
+                  <input ref={avatarInputRef} className="w-full rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#546b41] focus:bg-white" type="url" placeholder="https://example.com/photo.jpg" value={image} onChange={(event) => setImage(event.target.value)} maxLength={2048} />
+                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-[#546b41] px-3 py-2 text-sm font-bold text-white" disabled={avatarLoading}>{avatarLoading ? "Saving..." : "Update Photo"}</motion.button>
                 </form>
               </section>
 
               <section className="rounded-xl border border-[#ddd0b8] bg-white p-6 shadow-[0_4px_20px_rgba(60,35,10,0.10)]">
                 <h2 className="mb-4 border-b border-[#ddd0b8] pb-3 text-base font-bold text-[#3b2a1a]" style={{ fontFamily: "'Libre Baskerville', serif" }}>About Me</h2>
                 <form onSubmit={handleBioSubmit}>
-                  <textarea className="min-h-[120px] w-full resize-y rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-3 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#8b5e3c] focus:bg-white" placeholder="Tell the community about yourself..." value={bio} onChange={(event) => setBio(event.target.value)} maxLength={600} rows={6} />
+                  <textarea className="min-h-[120px] w-full resize-y rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-3 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#546b41] focus:bg-white" placeholder="Tell the community about yourself..." value={bio} onChange={(event) => setBio(event.target.value)} maxLength={600} rows={6} />
                   <div className="mt-1 text-right text-xs text-[#7a6550]">{bio.length}/600</div>
-                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-gradient-to-r from-[#3b2a1a] to-[#8b5e3c] px-3 py-2 text-sm font-bold text-[#fdf6ec]" disabled={bioLoading}>{bioLoading ? "Saving..." : "Save Bio"}</motion.button>
+                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-[#546b41] px-3 py-2 text-sm font-bold text-white" disabled={bioLoading}>{bioLoading ? "Saving..." : "Save Bio"}</motion.button>
                 </form>
               </section>
             </div>
@@ -304,12 +304,12 @@ export default function ProfilePage() {
                 <h2 className="mb-4 border-b border-[#ddd0b8] pb-3 text-base font-bold text-[#3b2a1a]" style={{ fontFamily: "'Libre Baskerville', serif" }}>Basic Information</h2>
                 <form onSubmit={handleBasicSubmit}>
                   <div className="grid gap-4 md:grid-cols-2">
-                    <input className="w-full rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#8b5e3c] focus:bg-white" value={name} onChange={(event) => setName(event.target.value)} placeholder="Your full name" />
-                    <input className="w-full rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#8b5e3c] focus:bg-white" value={location} onChange={(event) => setLocation(event.target.value)} placeholder="City, Country" />
+                    <input className="w-full rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#546b41] focus:bg-white" value={name} onChange={(event) => setName(event.target.value)} placeholder="Your full name" />
+                    <input className="w-full rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#546b41] focus:bg-white" value={location} onChange={(event) => setLocation(event.target.value)} placeholder="City, Country" />
                   </div>
-                  <input className="mt-4 w-full rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#8b5e3c] focus:bg-white" value={headline} onChange={(event) => setHeadline(event.target.value)} placeholder="Professional headline" />
-                  <input className="mt-4 w-full rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#8b5e3c] focus:bg-white" value={availability} onChange={(event) => setAvailability(event.target.value)} placeholder="Availability" />
-                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-gradient-to-r from-[#3b2a1a] to-[#8b5e3c] px-3 py-2 text-sm font-bold text-[#fdf6ec]" disabled={basicLoading}>{basicLoading ? "Saving..." : "Save Changes"}</motion.button>
+                  <input className="mt-4 w-full rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#546b41] focus:bg-white" value={headline} onChange={(event) => setHeadline(event.target.value)} placeholder="Professional headline" />
+                  <input className="mt-4 w-full rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#546b41] focus:bg-white" value={availability} onChange={(event) => setAvailability(event.target.value)} placeholder="Availability" />
+                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-[#546b41] px-3 py-2 text-sm font-bold text-white" disabled={basicLoading}>{basicLoading ? "Saving..." : "Save Changes"}</motion.button>
                 </form>
               </section>
 
@@ -318,20 +318,20 @@ export default function ProfilePage() {
                 <form onSubmit={handleSkillsSubmit}>
                   <div>
                     <div className="flex gap-2">
-                      <input className="flex-1 rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#8b5e3c] focus:bg-white" value={teachInput} onChange={(event) => setTeachInput(event.target.value)} placeholder="Add a skill you can teach" />
-                      <button type="button" className="rounded-lg border-[1.5px] border-[#8b5e3c] px-3 text-sm font-semibold text-[#8b5e3c]" onClick={() => addSkill("teach", teachInput)}>+ Add</button>
+                      <input className="flex-1 rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#546b41] focus:bg-white" value={teachInput} onChange={(event) => setTeachInput(event.target.value)} placeholder="Add a skill you can teach" />
+                      <button type="button" className="rounded-lg border-[1.5px] border-[#546b41] px-3 text-sm font-semibold text-[#546b41]" onClick={() => addSkill("teach", teachInput)}>+ Add</button>
                     </div>
                     <div className="mt-3 flex flex-wrap gap-2">{teachSkills.map((skill) => <Chip key={skill} tone="teach">{skill}</Chip>)}</div>
                   </div>
                   <div className="my-5 h-px bg-[#ddd0b8]" />
                   <div>
                     <div className="flex gap-2">
-                      <input className="flex-1 rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#8b5e3c] focus:bg-white" value={learnInput} onChange={(event) => setLearnInput(event.target.value)} placeholder="Add a skill you want to learn" />
-                      <button type="button" className="rounded-lg border-[1.5px] border-[#9b7fd4] px-3 text-sm font-semibold text-[#6b4fa8]" onClick={() => addSkill("learn", learnInput)}>+ Add</button>
+                      <input className="flex-1 rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#546b41] focus:bg-white" value={learnInput} onChange={(event) => setLearnInput(event.target.value)} placeholder="Add a skill you want to learn" />
+                      <button type="button" className="rounded-lg border-[1.5px] border-[#dcccac] px-3 text-sm font-semibold text-[#dcccac]" onClick={() => addSkill("learn", learnInput)}>+ Add</button>
                     </div>
                     <div className="mt-3 flex flex-wrap gap-2">{learnSkills.map((skill) => <Chip key={skill} tone="learn">{skill}</Chip>)}</div>
                   </div>
-                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-gradient-to-r from-[#3b2a1a] to-[#8b5e3c] px-3 py-2 text-sm font-bold text-[#fdf6ec]" disabled={skillsLoading}>{skillsLoading ? "Saving..." : "Save Skills"}</motion.button>
+                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-[#546b41] px-3 py-2 text-sm font-bold text-white" disabled={skillsLoading}>{skillsLoading ? "Saving..." : "Save Skills"}</motion.button>
                 </form>
               </section>
             </div>

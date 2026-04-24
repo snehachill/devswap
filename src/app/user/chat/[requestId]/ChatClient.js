@@ -50,24 +50,24 @@ function Avatar({ initials, size = "md", online = false }) {
   return (
     <div className="relative shrink-0">
       <div
-        className={`${dimensions} rounded-full flex items-center justify-center font-bold text-[#FFF8F0]`}
-        style={{ background: "linear-gradient(135deg, #C08552, #4B2E2B)" }}
+        className={`${dimensions} rounded-full flex items-center justify-center font-bold text-white`}
+        style={{ background: "linear-gradient(135deg, #06B6D4, #4F46E5)" }}
       >
         {initials}
       </div>
       {online ? (
-        <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-[#FFF8F0] bg-emerald-500" />
+        <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-white bg-cyan-400" />
       ) : null}
     </div>
   );
 }
 
 function StatusIcon({ status }) {
-  if (status === "read") return <CheckCheck size={13} className="text-[#C08552]" />;
+  if (status === "read") return <CheckCheck size={13} className="text-cyan-500" />;
   if (status === "delivered") {
-    return <CheckCheck size={13} className="text-[#8C5A3C] opacity-50" />;
+    return <CheckCheck size={13} className="text-indigo-500 opacity-50" />;
   }
-  return <Check size={13} className="text-[#8C5A3C] opacity-40" />;
+  return <Check size={13} className="text-indigo-500 opacity-40" />;
 }
 
 function TypingDots() {
@@ -76,7 +76,7 @@ function TypingDots() {
       {[0, 1, 2].map((index) => (
         <motion.span
           key={index}
-          className="h-1.5 w-1.5 rounded-full bg-[#8C5A3C]"
+          className="h-1.5 w-1.5 rounded-full bg-indigo-400"
           animate={{ y: [0, -4, 0] }}
           transition={{
             duration: 0.6,
@@ -111,15 +111,15 @@ function MessageBubble({ msg, isMe, meInitials, partnerInitials }) {
           }`}
           style={{
             background: isMe
-              ? "linear-gradient(135deg, #4B2E2B, #8C5A3C)"
-              : "#FFF8F0",
+              ? "linear-gradient(135deg, #4F46E5, #06B6D4)"
+              : "#EEF2FF",
           }}
         >
           {msg.text}
         </div>
 
         <div className={`flex items-center gap-1.5 px-1 ${isMe ? "flex-row-reverse" : "flex-row"}`}>
-          <span className="text-[10px] text-[#8C5A3C] opacity-60">{msg.timestamp}</span>
+          <span className="text-[10px] text-slate-500 opacity-60">{msg.timestamp}</span>
           {isMe ? <StatusIcon status={msg.status} /> : null}
         </div>
       </div>
@@ -132,11 +132,11 @@ function MessageBubble({ msg, isMe, meInitials, partnerInitials }) {
 function DateSeparator({ label }) {
   return (
     <div className="my-3 flex items-center gap-3">
-      <div className="h-px flex-1 bg-[#C08552]/15" />
-      <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8C5A3C]">
+      <div className="h-px flex-1 bg-indigo-200" />
+      <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-indigo-500">
         {label}
       </span>
-      <div className="h-px flex-1 bg-[#C08552]/15" />
+      <div className="h-px flex-1 bg-indigo-200" />
     </div>
   );
 }
@@ -149,23 +149,23 @@ function SwapBanner({ chat }) {
       transition={{ duration: 0.4, delay: 0.3 }}
       className="mx-4 mb-1 mt-3 flex flex-wrap items-center gap-3 rounded-xl px-4 py-2.5"
       style={{
-        background: "rgba(192,133,82,0.08)",
-        border: "1px solid rgba(192,133,82,0.2)",
+        background: "rgba(99,102,241,0.08)",
+        border: "1px solid rgba(99,102,241,0.2)",
       }}
     >
-      <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#8C5A3C]">
+      <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-indigo-600">
         {chat.status === "active" ? "Active swap" : "Swap request"}
       </span>
       <div className="flex flex-wrap gap-2">
         <span
           className="rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
-          style={{ background: "rgba(192,133,82,0.15)", color: "#4B2E2B" }}
+          style={{ background: "rgba(79,70,229,0.12)", color: "#3730a3" }}
         >
           {chat.partner.name} teaches {chat.swap.receive}
         </span>
         <span
           className="rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
-          style={{ background: "rgba(192,133,82,0.15)", color: "#4B2E2B" }}
+          style={{ background: "rgba(6,182,212,0.12)", color: "#155e75" }}
         >
           You teach {chat.swap.offer}
         </span>
@@ -324,31 +324,31 @@ export default function ChatClient({ chat }) {
       {/* Root container */}
       <div
         className="flex h-screen flex-col"
-        style={{ background: "linear-gradient(160deg, #FFF8F0 0%, #FAF0E6 100%)" }}
+        style={{ background: "linear-gradient(160deg, #F8FAFF 0%, #EEF2FF 55%, #E0F2FE 100%)" }}
       >
         {/* ── Header ── */}
         <header
           className="flex shrink-0 items-center gap-3 border-b px-4 py-3"
           style={{
-            borderColor: "rgba(192,133,82,0.18)",
-            background: "rgba(255,248,240,0.85)",
+            borderColor: "rgba(99,102,241,0.18)",
+            background: "rgba(255,255,255,0.82)",
             backdropFilter: "blur(12px)",
           }}
         >
           <Link
             href="/chats"
-            className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-[#C08552]/10"
+            className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-indigo-100"
           >
-            <ArrowLeft size={18} className="text-[#4B2E2B]" />
+            <ArrowLeft size={18} className="text-indigo-700" />
           </Link>
 
           <Avatar initials={chat.partner.initials} size="md" online={chat.partner.online} />
 
           <div className="min-w-0 flex-1">
-            <p className="truncate text-[14px] font-semibold text-[#4B2E2B]">
+            <p className="truncate text-[14px] font-semibold text-slate-900">
               {chat.partner.name}
             </p>
-            <p className="truncate text-[11px] text-[#8C5A3C]">
+            <p className="truncate text-[11px] text-slate-500">
               {chat.partner.online ? "Online now" : chat.partner.lastSeen}
             </p>
           </div>
