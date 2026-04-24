@@ -24,7 +24,7 @@ export default function SignUpForm() {
             className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#546b41] focus:bg-white focus:ring-2 focus:ring-[#546b41]/10"
             name="name"
             type="text"
-            placeholder="Sneha Tiwari"
+            placeholder="Alex Johnson"
           />
         </label>
         <label className="block">
