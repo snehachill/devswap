@@ -51,23 +51,23 @@ function Avatar({ initials, size = "md", online = false }) {
     <div className="relative shrink-0">
       <div
         className={`${dimensions} rounded-full flex items-center justify-center font-bold text-white`}
-        style={{ background: "linear-gradient(135deg, #06B6D4, #4F46E5)" }}
+        style={{ background: "linear-gradient(135deg, #5BABF0, #1A3FA6)" }}
       >
         {initials}
       </div>
       {online ? (
-        <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-white bg-cyan-400" />
+        <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-white bg-[#5BABF0]" />
       ) : null}
     </div>
   );
 }
 
 function StatusIcon({ status }) {
-  if (status === "read") return <CheckCheck size={13} className="text-cyan-500" />;
+  if (status === "read") return <CheckCheck size={13} className="text-[#5BABF0]" />;
   if (status === "delivered") {
-    return <CheckCheck size={13} className="text-indigo-500 opacity-50" />;
+    return <CheckCheck size={13} className="text-[#1A3FA6] opacity-50" />;
   }
-  return <Check size={13} className="text-indigo-500 opacity-40" />;
+  return <Check size={13} className="text-[#1A3FA6] opacity-40" />;
 }
 
 function TypingDots() {
@@ -76,7 +76,7 @@ function TypingDots() {
       {[0, 1, 2].map((index) => (
         <motion.span
           key={index}
-          className="h-1.5 w-1.5 rounded-full bg-indigo-400"
+          className="h-1.5 w-1.5 rounded-full bg-[#5BABF0]"
           animate={{ y: [0, -4, 0] }}
           transition={{
             duration: 0.6,
@@ -106,13 +106,13 @@ function MessageBubble({ msg, isMe, meInitials, partnerInitials }) {
         <div
           className={`rounded-2xl px-4 py-2.5 text-[13.5px] leading-relaxed shadow-sm ${
             isMe
-              ? "rounded-br-sm text-[#FFF8F0]"
-              : "rounded-bl-sm border border-[#C08552]/15 text-[#4B2E2B]"
+              ? "rounded-br-sm text-[#F8F9FC]"
+              : "rounded-bl-sm border border-[#5BABF0]/15 text-[#1A3FA6]"
           }`}
           style={{
             background: isMe
-              ? "linear-gradient(135deg, #4F46E5, #06B6D4)"
-              : "#EEF2FF",
+              ? "linear-gradient(135deg, #1A3FA6, #5BABF0)"
+              : "#F8F9FC",
           }}
         >
           {msg.text}
@@ -132,11 +132,11 @@ function MessageBubble({ msg, isMe, meInitials, partnerInitials }) {
 function DateSeparator({ label }) {
   return (
     <div className="my-3 flex items-center gap-3">
-      <div className="h-px flex-1 bg-indigo-200" />
-      <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-indigo-500">
+      <div className="h-px flex-1 bg-[#5BABF0]/35" />
+      <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#1A3FA6]">
         {label}
       </span>
-      <div className="h-px flex-1 bg-indigo-200" />
+      <div className="h-px flex-1 bg-[#5BABF0]/35" />
     </div>
   );
 }
@@ -149,23 +149,23 @@ function SwapBanner({ chat }) {
       transition={{ duration: 0.4, delay: 0.3 }}
       className="mx-4 mb-1 mt-3 flex flex-wrap items-center gap-3 rounded-xl px-4 py-2.5"
       style={{
-        background: "rgba(99,102,241,0.08)",
-        border: "1px solid rgba(99,102,241,0.2)",
+        background: "rgba(26,63,166,0.08)",
+        border: "1px solid rgba(26,63,166,0.2)",
       }}
     >
-      <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-indigo-600">
+      <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#1A3FA6]">
         {chat.status === "active" ? "Active swap" : "Swap request"}
       </span>
       <div className="flex flex-wrap gap-2">
         <span
           className="rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
-          style={{ background: "rgba(79,70,229,0.12)", color: "#3730a3" }}
+          style={{ background: "rgba(26,63,166,0.12)", color: "#1A3FA6" }}
         >
           {chat.partner.name} teaches {chat.swap.receive}
         </span>
         <span
           className="rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
-          style={{ background: "rgba(6,182,212,0.12)", color: "#155e75" }}
+          style={{ background: "rgba(91,171,240,0.12)", color: "#1A3FA6" }}
         >
           You teach {chat.swap.offer}
         </span>
@@ -324,22 +324,22 @@ export default function ChatClient({ chat }) {
       {/* Root container */}
       <div
         className="flex h-screen flex-col"
-        style={{ background: "linear-gradient(160deg, #F8FAFF 0%, #EEF2FF 55%, #E0F2FE 100%)" }}
+        style={{ background: "linear-gradient(160deg, #F8F9FC 0%, #F8F9FC 55%, #F8F9FC 100%)" }}
       >
         {/* ── Header ── */}
         <header
           className="flex shrink-0 items-center gap-3 border-b px-4 py-3"
           style={{
-            borderColor: "rgba(99,102,241,0.18)",
+            borderColor: "rgba(26,63,166,0.18)",
             background: "rgba(255,255,255,0.82)",
             backdropFilter: "blur(12px)",
           }}
         >
           <Link
             href="/chats"
-            className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-indigo-100"
+            className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-[#5BABF0]/15"
           >
-            <ArrowLeft size={18} className="text-indigo-700" />
+            <ArrowLeft size={18} className="text-[#1A3FA6]" />
           </Link>
 
           <Avatar initials={chat.partner.initials} size="md" online={chat.partner.online} />
@@ -355,20 +355,20 @@ export default function ChatClient({ chat }) {
 
           {/* Connection indicator */}
           {!connected && (
-            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
+            <span className="rounded-full bg-[#5BABF0]/15 px-2 py-0.5 text-[10px] font-semibold text-[#1A3FA6]">
               Reconnecting…
             </span>
           )}
 
           <div className="flex items-center gap-1">
-            <button className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-[#C08552]/10">
-              <Phone size={16} className="text-[#8C5A3C]" />
+            <button className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-[#5BABF0]/10">
+              <Phone size={16} className="text-[#1A3FA6]" />
             </button>
-            <button className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-[#C08552]/10">
-              <Video size={16} className="text-[#8C5A3C]" />
+            <button className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-[#5BABF0]/10">
+              <Video size={16} className="text-[#1A3FA6]" />
             </button>
-            <button className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-[#C08552]/10">
-              <MoreHorizontal size={16} className="text-[#8C5A3C]" />
+            <button className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-[#5BABF0]/10">
+              <MoreHorizontal size={16} className="text-[#1A3FA6]" />
             </button>
           </div>
         </header>
@@ -403,8 +403,8 @@ export default function ChatClient({ chat }) {
               >
                 <Avatar initials={chat.partner.initials} size="sm" />
                 <div
-                  className="rounded-2xl rounded-bl-sm border border-[#C08552]/15 px-4 py-2.5 shadow-sm"
-                  style={{ background: "#FFF8F0" }}
+                  className="rounded-2xl rounded-bl-sm border border-[#5BABF0]/15 px-4 py-2.5 shadow-sm"
+                  style={{ background: "#F8F9FC" }}
                 >
                   <TypingDots />
                 </div>
@@ -421,11 +421,11 @@ export default function ChatClient({ chat }) {
             <button
               key={reply}
               onClick={() => setInput(reply)}
-              className="shrink-0 rounded-full border px-3 py-1 text-[11.5px] font-medium transition-colors hover:bg-[#C08552]/10"
+              className="shrink-0 rounded-full border px-3 py-1 text-[11.5px] font-medium transition-colors hover:bg-[#5BABF0]/10"
               style={{
-                borderColor: "rgba(192,133,82,0.3)",
-                color: "#8C5A3C",
-                background: "rgba(255,248,240,0.8)",
+                borderColor: "rgba(91,171,240,0.3)",
+                color: "#1A3FA6",
+                background: "rgba(248,249,252,0.8)",
               }}
             >
               {reply}
@@ -437,20 +437,20 @@ export default function ChatClient({ chat }) {
         <div
           className="shrink-0 border-t px-4 py-3"
           style={{
-            borderColor: "rgba(192,133,82,0.18)",
-            background: "rgba(255,248,240,0.9)",
+            borderColor: "rgba(91,171,240,0.18)",
+            background: "rgba(248,249,252,0.9)",
             backdropFilter: "blur(12px)",
           }}
         >
           <div
             className="flex items-end gap-2 rounded-2xl border px-3 py-2"
             style={{
-              borderColor: "rgba(192,133,82,0.25)",
-              background: "#FFF8F0",
+              borderColor: "rgba(91,171,240,0.25)",
+              background: "#F8F9FC",
             }}
           >
-            <button className="mb-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-[#C08552]/10">
-              <Smile size={18} className="text-[#8C5A3C]" />
+            <button className="mb-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-[#5BABF0]/10">
+              <Smile size={18} className="text-[#1A3FA6]" />
             </button>
 
             <textarea
@@ -460,12 +460,12 @@ export default function ChatClient({ chat }) {
               onKeyDown={handleKeyDown}
               placeholder="Type a message…"
               rows={1}
-              className="max-h-32 flex-1 resize-none bg-transparent text-[13.5px] text-[#4B2E2B] placeholder-[#8C5A3C]/40 outline-none"
+              className="max-h-32 flex-1 resize-none bg-transparent text-[13.5px] text-[#1A3FA6] placeholder-[#1A3FA6]/40 outline-none"
               style={{ lineHeight: "1.5" }}
             />
 
-            <button className="mb-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-[#C08552]/10">
-              <Paperclip size={16} className="text-[#8C5A3C]" />
+            <button className="mb-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-[#5BABF0]/10">
+              <Paperclip size={16} className="text-[#1A3FA6]" />
             </button>
 
             <button
@@ -474,13 +474,13 @@ export default function ChatClient({ chat }) {
               className="mb-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all disabled:opacity-30"
               style={{
                 background: input.trim()
-                  ? "linear-gradient(135deg, #4B2E2B, #8C5A3C)"
+                  ? "linear-gradient(135deg, #1A3FA6, #1A3FA6)"
                   : "transparent",
               }}
             >
               <Send
                 size={15}
-                className={input.trim() ? "text-[#FFF8F0]" : "text-[#8C5A3C]"}
+                className={input.trim() ? "text-[#F8F9FC]" : "text-[#1A3FA6]"}
               />
             </button>
           </div>

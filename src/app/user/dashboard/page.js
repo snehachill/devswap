@@ -13,7 +13,7 @@ export default async function DashboardPage() {
     return (
       <main className="min-h-screen bg-transparent px-5 pb-16 pt-28">
         <div className="mx-auto max-w-6xl">
-          <div className="rounded-3xl border border-dashed border-[#dcccac]/30 bg-white px-6 py-8 text-center">
+          <div className="rounded-3xl border border-dashed border-[#5BABF0]/30 bg-white px-6 py-8 text-center">
             <p className="text-lg font-medium text-slate-900">Dashboard unavailable</p>
             <p className="mt-2 text-sm text-slate-500">{dashboard.error}</p>
           </div>

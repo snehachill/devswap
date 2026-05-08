@@ -19,22 +19,22 @@ function getInitials(name = "") {
 }
 
 function avatarTone(direction, status) {
-  if (status === "active") return "bg-[#99ad7a]/20 text-[#99ad7a]";
+  if (status === "active") return "bg-[#5BABF0]/20 text-[#5BABF0]";
   if (["completed", "cancelled", "declined"].includes(status)) {
     return "bg-slate-100 text-slate-500";
   }
   return direction === "incoming"
-    ? "bg-[#546b41]/20 text-[#546b41]"
-    : "bg-[#99ad7a]/20 text-[#99ad7a]";
+    ? "bg-[#1A3FA6]/20 text-[#1A3FA6]"
+    : "bg-[#5BABF0]/20 text-[#5BABF0]";
 }
 
 function badgeStyle(status) {
-  if (status === "active") return "bg-[#99ad7a]/20 border-[#99ad7a]/30 text-[#99ad7a]";
-  if (status === "completed") return "bg-[#546b41]/20 border-[#546b41]/30 text-[#546b41]";
+  if (status === "active") return "bg-[#5BABF0]/20 border-[#5BABF0]/30 text-[#5BABF0]";
+  if (status === "completed") return "bg-[#1A3FA6]/20 border-[#1A3FA6]/30 text-[#1A3FA6]";
   if (status === "cancelled" || status === "declined") {
     return "bg-rose-100 border-rose-200 text-rose-700";
   }
-  return "bg-[#dcccac]/10 border-[#dcccac]/20 text-[#dcccac]";
+  return "bg-[#5BABF0]/10 border-[#5BABF0]/20 text-[#5BABF0]";
 }
 
 const cardVariants = {
@@ -65,8 +65,8 @@ function AvatarBadge({ name, direction, status }) {
 function RequestAction({ action, request, isBusy, onAction }) {
   const className = `flex items-center gap-2 rounded-xl px-5 py-2 text-[0.84rem] font-medium transition-colors ${
     action.primary
-      ? "bg-[#546b41] text-white hover:bg-[#3d4f2f]"
-      : "border border-[#546b41]/30 bg-transparent text-[#546b41] hover:bg-[#546b41]/10"
+      ? "bg-[#1A3FA6] text-white hover:bg-[#4A90E8]"
+      : "border border-[#1A3FA6]/30 bg-transparent text-[#1A3FA6] hover:bg-[#1A3FA6]/10"
   }`;
 
   if (action.href) {
@@ -89,7 +89,7 @@ function RequestAction({ action, request, isBusy, onAction }) {
       {isBusy ? (
         <>
           <motion.span
-            className="block h-3.5 w-3.5 rounded-full border-2 border-[#f5e6cf] border-t-[#8C5A3C]"
+            className="block h-3.5 w-3.5 rounded-full border-2 border-[#F8F9FC] border-t-[#1A3FA6]"
             animate={{ rotate: 360 }}
             transition={{ repeat: Infinity, duration: 0.7, ease: "linear" }}
           />
@@ -113,7 +113,7 @@ function RequestCard({ request, actions, pendingId, onAction, index }) {
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="rounded-[20px] border border-indigo-100 bg-white px-5 py-5 shadow-[0_2px_12px_rgba(79,70,229,0.08)]"
+      className="rounded-[20px] border border-[#5BABF0]/25 bg-white px-5 py-5 shadow-[0_2px_12px_rgba(26,63,166,0.08)]"
     >
       <div className="flex flex-col gap-4">
         <div className="flex items-start gap-4">
@@ -136,9 +136,9 @@ function RequestCard({ request, actions, pendingId, onAction, index }) {
             </div>
 
             <p className="mt-1 text-[0.93rem] text-slate-500">
-              Offers <span className="font-medium text-indigo-700">{request.teachSkillOffered}</span>
+              Offers <span className="font-medium text-[#1A3FA6]">{request.teachSkillOffered}</span>
               {" · "}
-              Wants <span className="font-medium text-cyan-700">{request.learnSkillRequested}</span>
+              Wants <span className="font-medium text-[#5BABF0]">{request.learnSkillRequested}</span>
             </p>
 
             {request.otherUser.headline ? (
@@ -148,7 +148,7 @@ function RequestCard({ request, actions, pendingId, onAction, index }) {
             ) : null}
 
             {request.message ? (
-              <p className="mt-3 rounded-xl bg-indigo-50 px-3 py-2 text-[0.82rem] leading-relaxed text-slate-600">
+              <p className="mt-3 rounded-xl bg-[#F8F9FC] px-3 py-2 text-[0.82rem] leading-relaxed text-slate-600">
                 {request.message}
               </p>
             ) : null}
@@ -197,7 +197,7 @@ function RequestsSection({ title, items, empty, actions, pendingId, onAction }) 
             key="empty"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="rounded-[20px] border border-dashed border-[#dcccac]/30 bg-white px-5 py-8 text-center text-[0.87rem] text-slate-500"
+            className="rounded-[20px] border border-dashed border-[#5BABF0]/30 bg-white px-5 py-8 text-center text-[0.87rem] text-slate-500"
           >
             {empty}
           </motion.div>
@@ -221,25 +221,25 @@ export default function RequestsClient({ requests }) {
       if (result.success) {
         toast.success(result.message, {
           style: {
-            background: "#4338ca",
+            background: "#1A3FA6",
             color: "#ffffff",
             borderRadius: "12px",
             fontSize: "0.86rem",
-            boxShadow: "0 4px 20px rgba(67,56,202,0.2)",
+            boxShadow: "0 4px 20px rgba(26,63,166,0.2)",
           },
-          iconTheme: { primary: "#06b6d4", secondary: "#4338ca" },
+          iconTheme: { primary: "#5BABF0", secondary: "#1A3FA6" },
         });
         router.refresh();
       } else {
         toast.error(result.error || "Unable to update request.", {
           style: {
-            background: "#4338ca",
+            background: "#1A3FA6",
             color: "#ffffff",
             borderRadius: "12px",
             fontSize: "0.86rem",
-            boxShadow: "0 4px 20px rgba(67,56,202,0.2)",
+            boxShadow: "0 4px 20px rgba(26,63,166,0.2)",
           },
-          iconTheme: { primary: "#fb7185", secondary: "#4338ca" },
+          iconTheme: { primary: "#4A90E8", secondary: "#1A3FA6" },
         });
       }
 

@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #fff8ec;
-  --bg-soft: #dcccac;
+  --bg: #F8F9FC;
+  --bg-soft: #5BABF0;
   --card: #ffffff;
   --text: #0f172a;
   --muted: #64748b;
-  --primary: #546b41;
-  --primary-strong: #3d4f2f;
-  --secondary: #99ad7a;
-  --accent: #dcccac;
-  --ring: rgba(84, 107, 65, 0.35);
+  --primary: #1A3FA6;
+  --primary-strong: #4A90E8;
+  --secondary: #5BABF0;
+  --accent: #5BABF0;
+  --ring: rgba(26, 63, 166, 0.35);
 }
 
 html {
@@ -18,17 +18,17 @@ html {
 }
 
 body {
-  background: radial-gradient(circle at 8% -10%, #dcccac 0%, transparent 34%),
-    radial-gradient(circle at 100% 18%, #99ad7a 0%, transparent 32%),
-    radial-gradient(circle at 50% 110%, #fff8ec 0%, transparent 30%),
+  background: radial-gradient(circle at 8% -10%, rgba(91, 171, 240, 0.2) 0%, transparent 34%),
+    radial-gradient(circle at 100% 18%, rgba(26, 63, 166, 0.12) 0%, transparent 32%),
+    radial-gradient(circle at 50% 110%, #F8F9FC 0%, transparent 30%),
     var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: #dcccac;
-  color: #546b41;
+  background: #5BABF0;
+  color: #1A3FA6;
 }
 
 .app-shell {
@@ -44,10 +44,10 @@ body {
 }
 
 .ui-card-soft {
-  border: 1px solid #dcccac;
+  border: 1px solid #5BABF0;
   border-radius: 20px;
-  background: linear-gradient(180deg, #ffffff 0%, #fff8ec 100%);
-  box-shadow: 0 8px 24px rgba(84, 107, 65, 0.08);
+  background: linear-gradient(180deg, #ffffff 0%, #F8F9FC 100%);
+  box-shadow: 0 8px 24px rgba(26, 63, 166, 0.08);
 }
 
 .ui-glass {
@@ -74,9 +74,9 @@ body {
   align-items: center;
   gap: 0.4rem;
   border-radius: 9999px;
-  border: 1px solid #c7d2fe;
-  background: #eef2ff;
-  color: #4338ca;
+  border: 1px solid #5BABF0;
+  background: #F8F9FC;
+  color: #1A3FA6;
   padding: 0.36rem 0.8rem;
   font-size: 0.72rem;
   letter-spacing: 0.14em;

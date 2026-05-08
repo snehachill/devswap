@@ -66,6 +66,25 @@ function formatMessage(message, currentUserId) {
   };
 }
 
+function buildConversation(request, userId, latestMessage) {
+  const partner = buildPartner(request, userId);
+  const readBy = Array.isArray(latestMessage?.readBy)
+    ? latestMessage.readBy.map((entry) => String(entry?._id ?? entry))
+    : [];
+  const unreadCount =
+    latestMessage && String(latestMessage.sender?._id ?? latestMessage.sender) !== userId && !readBy.includes(userId)
+      ? 1
+      : 0;
+
+  return {
+    id: String(request._id),
+    partner,
+    preview: latestMessage?.text ?? request.message ?? "",
+    previewTimestamp: latestMessage?.createdAt ? formatTime(latestMessage.createdAt) : "",
+    unreadCount,
+  };
+}
+
 async function getAuthorizedRequest(requestId, userId) {
   await connectToDatabase();
 
@@ -87,6 +106,48 @@ async function getAuthorizedRequest(requestId, userId) {
   }
 
   return { request };
+}
+
+export async function getSwapsChatPageData(selectedRequestId = "") {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return { error: "Please sign in to open chat." };
+  }
+
+  await connectToDatabase();
+
+  const requests = await SwapRequest.find({
+    status: "active",
+    $or: [{ requester: session.user.id }, { receiver: session.user.id }],
+  })
+    .populate("requester", "name image headline location")
+    .populate("receiver", "name image headline location")
+    .sort({ updatedAt: -1 })
+    .lean();
+
+  const conversations = await Promise.all(
+    requests.map(async (request) => {
+      const latestMessage = await ChatMessage.findOne({ request: request._id })
+        .populate("sender", "name")
+        .sort({ createdAt: -1 })
+        .lean();
+
+      return buildConversation(request, session.user.id, latestMessage);
+    }),
+  );
+
+  const selectedId =
+    selectedRequestId && conversations.some((conversation) => conversation.id === selectedRequestId)
+      ? selectedRequestId
+      : "";
+  const selectedChatResult = selectedId ? await getChatThread(selectedId) : null;
+
+  return {
+    conversations,
+    selectedRequestId: selectedId,
+    selectedChat: selectedChatResult?.chat ?? null,
+  };
 }
 
 export async function getChatThread(requestId) {

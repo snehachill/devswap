@@ -27,14 +27,14 @@ const NAV_LINKS = [
 function DevSwapLogo() {
   return (
     <Link href="/" className="group inline-flex items-center gap-3">
-      <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#546b41] to-[#99ad7a] text-white shadow-md shadow-[#546b41]/20">
+      <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#1A3FA6] to-[#5BABF0] text-white shadow-md shadow-[#1A3FA6]/20">
         <ArrowLeftRight size={16} />
       </span>
       <span
         className="text-[1.4rem] font-medium tracking-tight text-slate-900 transition-colors duration-300"
         style={{ fontFamily: "var(--font-dm-serif), serif" }}
       >
-        Dev<span className="text-[#546b41]">Swap</span>
+        Dev<span className="text-[#1A3FA6]">Swap</span>
       </span>
     </Link>
   );
@@ -46,12 +46,12 @@ function NavLink({ href, label, active, onClick }) {
       href={href}
       onClick={onClick}
       className={`group relative inline-flex items-center py-2 text-xs font-semibold uppercase tracking-[0.08em] transition-colors duration-300 ${
-        active ? "text-slate-900" : "text-slate-500 hover:text-[#546b41]"
+        active ? "text-slate-900" : "text-slate-500 hover:text-[#1A3FA6]"
       }`}
     >
       {label}
       <span
-        className={`absolute bottom-0 left-0 h-0.5 rounded-full bg-[#546b41] transition-all duration-300 ${
+        className={`absolute bottom-0 left-0 h-0.5 rounded-full bg-[#1A3FA6] transition-all duration-300 ${
           active ? "w-full" : "w-0 group-hover:w-full"
         }`}
       />
@@ -65,7 +65,7 @@ function IconButton({ label, children }) {
       type="button"
       aria-label={label}
       suppressHydrationWarning
-      className="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-all duration-300 hover:bg-[#546b41]/10 hover:text-[#546b41]"
+      className="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-all duration-300 hover:bg-[#1A3FA6]/10 hover:text-[#1A3FA6]"
     >
       {children}
     </button>
@@ -84,7 +84,7 @@ function Avatar({ user }) {
     : "?";
 
   return (
-    <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-[#546b41] text-xs font-semibold text-white">
+    <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-[#1A3FA6] text-xs font-semibold text-white">
       {user?.image ? (
         <Image
           src={user.image}
@@ -104,7 +104,7 @@ function DropdownItem({ icon: Icon, label, href, onClick, danger = false }) {
   const className = `flex w-full items-center gap-2.5 rounded-2xl px-3 py-2.5 text-sm transition-colors duration-300 ${
     danger
       ? "text-rose-600 hover:bg-rose-50 hover:text-rose-700"
-      : "text-slate-600 hover:bg-[#546b41]/10 hover:text-[#546b41]"
+      : "text-slate-600 hover:bg-[#1A3FA6]/10 hover:text-[#1A3FA6]"
   }`;
 
   if (href) {
@@ -136,7 +136,7 @@ function UserDropdown({ session, onClose }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 8 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="absolute right-0 top-full mt-3 w-64 rounded-3xl border border-[#dcccac]/20 bg-white/95 p-3 shadow-[0_18px_50px_rgba(84,107,65,0.12)] backdrop-blur-xl"
+      className="absolute right-0 top-full mt-3 w-64 rounded-3xl border border-[#5BABF0]/20 bg-white/95 p-3 shadow-[0_18px_50px_rgba(26,63,166,0.12)] backdrop-blur-xl"
     >
       <div className="flex items-center gap-3 rounded-[20px] bg-white/60 px-3 py-3">
         <Avatar user={session.user} />
@@ -154,7 +154,7 @@ function UserDropdown({ session, onClose }) {
         <DropdownItem icon={Home} label="Home" href="/" onClick={onClose} />
       </div>
 
-      <div className="mt-3 border-t border-indigo-100 pt-3">
+      <div className="mt-3 border-t border-[#5BABF0]/25 pt-3">
         <DropdownItem
           icon={LogOut}
           label="Sign Out"
@@ -178,7 +178,7 @@ function MobileMenu({ open, session, onClose }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="border-t border-[#dcccac]/20 bg-white/95 px-5 pb-5 pt-4 backdrop-blur-[18px] md:hidden"
+          className="border-t border-[#5BABF0]/20 bg-white/95 px-5 pb-5 pt-4 backdrop-blur-[18px] md:hidden"
         >
           <nav className="flex flex-col gap-1">
             {NAV_LINKS.map((item) => (
@@ -204,14 +204,14 @@ function MobileMenu({ open, session, onClose }) {
                 <Link
                   href="/user/dashboard"
                   onClick={onClose}
-                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#546b41] px-5 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-px hover:bg-[#3d4f2f]"
+                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#1A3FA6] px-5 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-px hover:bg-[#4A90E8]"
                 >
                   Go To Dashboard
                 </Link>
                 <Link
                   href="/user/profile"
                   onClick={onClose}
-                  className="text-sm uppercase tracking-[0.06em] text-slate-500 transition-colors duration-300 hover:text-[#546b41]"
+                  className="text-sm uppercase tracking-[0.06em] text-slate-500 transition-colors duration-300 hover:text-[#1A3FA6]"
                 >
                   Profile
                 </Link>
@@ -221,14 +221,14 @@ function MobileMenu({ open, session, onClose }) {
                 <Link
                   href="/sign-up"
                   onClick={onClose}
-                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#546b41] px-5 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-px hover:bg-[#3d4f2f]"
+                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#1A3FA6] px-5 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-px hover:bg-[#4A90E8]"
                 >
                   Get Started
                 </Link>
                 <Link
                   href="/sign-in"
                   onClick={onClose}
-                  className="text-sm uppercase tracking-[0.06em] text-slate-500 transition-colors duration-300 hover:text-[#546b41]"
+                  className="text-sm uppercase tracking-[0.06em] text-slate-500 transition-colors duration-300 hover:text-[#1A3FA6]"
                 >
                   Sign In
                 </Link>
@@ -283,7 +283,7 @@ export default function Navbar({ session }) {
       className="fixed inset-x-0 top-0 z-50 px-4 pt-3"
       style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
     >
-      <div className="mx-auto max-w-7xl rounded-2xl border border-white/70 bg-white/75 shadow-[0_12px_34px_rgba(84,107,65,0.10)] backdrop-blur-xl transition-all duration-300 ease-out">
+      <div className="mx-auto max-w-7xl rounded-2xl border border-white/70 bg-white/75 shadow-[0_12px_34px_rgba(26,63,166,0.10)] backdrop-blur-xl transition-all duration-300 ease-out">
         <div className="mx-auto flex h-17 items-center justify-between px-5 sm:px-8 lg:px-12">
           <div className="flex min-w-0 items-center">
             <DevSwapLogo />
@@ -311,14 +311,14 @@ export default function Navbar({ session }) {
               <>
                 <Link
                   href="/user/requests"
-                  className="hidden min-h-10 items-center rounded-full border border-[#99ad7a]/30 bg-[#99ad7a]/10 px-5 text-sm font-medium text-[#99ad7a] transition-all duration-300 hover:-translate-y-px hover:bg-[#99ad7a]/20 sm:inline-flex"
+                  className="hidden min-h-10 items-center rounded-full border border-[#5BABF0]/30 bg-[#5BABF0]/10 px-5 text-sm font-medium text-[#5BABF0] transition-all duration-300 hover:-translate-y-px hover:bg-[#5BABF0]/20 sm:inline-flex"
                 >
                   Requests
                 </Link>
 
                 <Link
                   href="/user/discover"
-                  className="hidden min-h-10 items-center rounded-full bg-[#546b41] px-5 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-px hover:bg-[#3d4f2f] sm:inline-flex"
+                  className="hidden min-h-10 items-center rounded-full bg-[#1A3FA6] px-5 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-px hover:bg-[#4A90E8] sm:inline-flex"
                 >
                   Discover
                 </Link>
@@ -328,7 +328,7 @@ export default function Navbar({ session }) {
                     type="button"
                     suppressHydrationWarning
                     onClick={() => setShowDropdown((value) => !value)}
-                    className="inline-flex items-center gap-2 rounded-full px-1.5 py-1 transition-all duration-300 hover:bg-[#546b41]/10"
+                    className="inline-flex items-center gap-2 rounded-full px-1.5 py-1 transition-all duration-300 hover:bg-[#1A3FA6]/10"
                   >
                     <Avatar user={session.user} />
                     <ChevronDown size={15} className="text-slate-500" />
@@ -345,13 +345,13 @@ export default function Navbar({ session }) {
               <>
                 <Link
                   href="/sign-in"
-                  className="hidden text-xs font-medium uppercase tracking-[0.06em] text-slate-500 transition-colors duration-300 hover:text-[#546b41] sm:inline-flex"
+                  className="hidden text-xs font-medium uppercase tracking-[0.06em] text-slate-500 transition-colors duration-300 hover:text-[#1A3FA6] sm:inline-flex"
                 >
                   Sign In
                 </Link>
                 <Link
                   href="/sign-up"
-                  className="hidden min-h-10 items-center rounded-full bg-[#546b41] px-5 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-px hover:bg-[#3d4f2f] sm:inline-flex"
+                  className="hidden min-h-10 items-center rounded-full bg-[#1A3FA6] px-5 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-px hover:bg-[#4A90E8] sm:inline-flex"
                 >
                   Get Started
                 </Link>
@@ -363,7 +363,7 @@ export default function Navbar({ session }) {
               suppressHydrationWarning
               onClick={() => setMobileOpen((value) => !value)}
               aria-label="Toggle navigation"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[#546b41] transition-all duration-300 hover:bg-[#546b41]/10 md:hidden"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[#1A3FA6] transition-all duration-300 hover:bg-[#1A3FA6]/10 md:hidden"
             >
               {mobileOpen ? <X size={19} /> : <Menu size={19} />}
             </button>

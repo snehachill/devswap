@@ -33,9 +33,9 @@ const normalizeImageUrl = (value = "") => {
 
 function Chip({ children, tone = "default" }) {
   const tones = {
-    default: "bg-[#dcccac]/10 border-[#dcccac]/20 text-[#dcccac]",
-    teach: "bg-[#99ad7a]/10 border-[#99ad7a]/20 text-[#99ad7a]",
-    learn: "bg-[#546b41]/10 border-[#546b41]/20 text-[#546b41]",
+    default: "bg-[#5BABF0]/10 border-[#5BABF0]/20 text-[#5BABF0]",
+    teach: "bg-[#5BABF0]/10 border-[#5BABF0]/20 text-[#5BABF0]",
+    learn: "bg-[#1A3FA6]/10 border-[#1A3FA6]/20 text-[#1A3FA6]",
   };
 
   return <span className={`inline-flex rounded-full border px-3 py-1.5 text-sm font-semibold ${tones[tone]}`}>{children}</span>;
@@ -191,27 +191,27 @@ export default function ProfilePage() {
     <>
       <Toaster position="top-right" />
 
-      <div className="relative min-h-[90vh] overflow-hidden bg-transparent bg-[radial-gradient(ellipse_80%_60%_at_20%_10%,rgba(84,107,65,0.13)_0%,transparent_60%),radial-gradient(ellipse_60%_50%_at_80%_90%,rgba(153,173,122,0.12)_0%,transparent_55%)] px-5 pb-5 pt-24 md:px-10 md:pb-10 md:pt-24" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <div className="relative min-h-[90vh] overflow-hidden bg-transparent bg-[radial-gradient(ellipse_80%_60%_at_20%_10%,rgba(26,63,166,0.13)_0%,transparent_60%),radial-gradient(ellipse_60%_50%_at_80%_90%,rgba(91,171,240,0.12)_0%,transparent_55%)] px-5 pb-5 pt-24 md:px-10 md:pb-10 md:pt-24" style={{ fontFamily: "'DM Sans', sans-serif" }}>
         <motion.div className="relative z-10 mx-auto max-w-[1200px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
           <motion.section
-            className="mb-8 overflow-hidden rounded-[28px] border border-[#dcccac]/20 bg-white shadow-[0_10px_45px_rgba(84,107,65,0.14)]"
+            className="mb-8 overflow-hidden rounded-[28px] border border-[#5BABF0]/20 bg-white shadow-[0_10px_45px_rgba(26,63,166,0.14)]"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
             <div
-              className="relative h-[170px] md:h-[220px] bg-[radial-gradient(circle_at_20%_30%,rgba(244,193,101,0.95),transparent_26%),radial-gradient(circle_at_62%_0%,rgba(86,144,185,0.65),transparent_26%),radial-gradient(circle_at_74%_45%,rgba(230,138,82,0.8),transparent_24%),radial-gradient(circle_at_96%_12%,rgba(139,215,182,0.8),transparent_20%),linear-gradient(115deg,#eba93c_0%,#f0cf76_30%,#eda241_48%,#86a4bb_72%,#bfe5d8_100%)]"
+              className="relative h-[170px] md:h-[220px] bg-[radial-gradient(circle_at_20%_30%,rgba(91,171,240,0.95),transparent_26%),radial-gradient(circle_at_62%_0%,rgba(91,171,240,0.65),transparent_26%),radial-gradient(circle_at_74%_45%,rgba(74,144,232,0.8),transparent_24%),radial-gradient(circle_at_96%_12%,rgba(91,171,240,0.8),transparent_20%),linear-gradient(115deg,#5BABF0_0%,#5BABF0_30%,#5BABF0_48%,#5BABF0_72%,#5BABF0_100%)]"
               style={
                 safeCoverImage
                   ? {
-                      backgroundImage: `linear-gradient(rgba(59,42,26,0.12), rgba(59,42,26,0.12)), url(${safeCoverImage})`,
+                      backgroundImage: `linear-gradient(rgba(26,63,166,0.12), rgba(26,63,166,0.12)), url(${safeCoverImage})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                     }
                   : undefined
               }
             >
-              <button type="button" onClick={() => avatarInputRef.current?.focus()} className="absolute right-4 top-4 inline-flex rounded-full border border-[#dcccac]/70 bg-[#dcccac]/80 px-3 py-2 text-sm font-semibold text-[#546b41] shadow-[0_8px_18px_rgba(84,107,65,0.12)] transition-all duration-200 hover:scale-105">
+              <button type="button" onClick={() => avatarInputRef.current?.focus()} className="absolute right-4 top-4 inline-flex rounded-full border border-[#5BABF0]/70 bg-[#5BABF0]/80 px-3 py-2 text-sm font-semibold text-[#1A3FA6] shadow-[0_8px_18px_rgba(26,63,166,0.12)] transition-all duration-200 hover:scale-105">
                 Edit
               </button>
             </div>
@@ -219,38 +219,38 @@ export default function ProfilePage() {
             <div className="px-5 pb-6 md:px-8 md:pb-8">
               <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
                 <div className="flex flex-col gap-4 md:flex-row md:items-end">
-                  <motion.div className="relative -mt-14 flex h-28 w-28 items-center justify-center overflow-hidden rounded-full border-[5px] border-white bg-[#f2e9db] shadow-[0_10px_26px_rgba(60,35,10,0.16)] md:h-32 md:w-32" whileHover={{ scale: 1.03 }} onClick={() => avatarInputRef.current?.focus()}>
+                  <motion.div className="relative -mt-14 flex h-28 w-28 items-center justify-center overflow-hidden rounded-full border-[5px] border-white bg-[#F8F9FC] shadow-[0_10px_26px_rgba(26,63,166,0.16)] md:h-32 md:w-32" whileHover={{ scale: 1.03 }} onClick={() => avatarInputRef.current?.focus()}>
                     {safeImage ? (
                       <Image src={safeImage} alt="avatar" className="h-full w-full object-cover" width={128} height={128} />
                     ) : (
-                      <span className="text-2xl font-bold text-[#6b4226]" style={{ fontFamily: "'Libre Baskerville', serif" }}>{initials(profile?.name)}</span>
+                      <span className="text-2xl font-bold text-[#1A3FA6]" style={{ fontFamily: "'Libre Baskerville', serif" }}>{initials(profile?.name)}</span>
                     )}
                   </motion.div>
 
                   <div>
-                    <h1 className="text-3xl font-bold tracking-[-0.02em] text-[#3b2a1a] md:text-[2.5rem]" style={{ fontFamily: "'Libre Baskerville', serif" }}>{profile?.name}</h1>
-                    <p className="mt-1 text-lg text-[#7a6550]">{profile?.headline || "Add your professional headline"}</p>
-                    <p className="mt-1 text-base text-[#8b5e3c]">{profile?.location || "Add your location"}</p>
+                    <h1 className="text-3xl font-bold tracking-[-0.02em] text-[#1A3FA6] md:text-[2.5rem]" style={{ fontFamily: "'Libre Baskerville', serif" }}>{profile?.name}</h1>
+                    <p className="mt-1 text-lg text-[#5BABF0]">{profile?.headline || "Add your professional headline"}</p>
+                    <p className="mt-1 text-base text-[#1A3FA6]">{profile?.location || "Add your location"}</p>
                     <div className="mt-4 flex flex-wrap gap-3">
-                      <button type="button" className="rounded-full bg-[#546b41] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_8px_18px_rgba(84,107,65,0.18)] transition-all duration-200 hover:-translate-y-px">Edit Profile</button>
-                      <button type="button" className="rounded-full border border-[#99ad7a]/30 bg-white px-5 py-2.5 text-sm font-semibold text-[#546b41] transition-all duration-200 hover:-translate-y-px hover:bg-[#99ad7a]/10">Settings</button>
+                      <button type="button" className="rounded-full bg-[#1A3FA6] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_8px_18px_rgba(26,63,166,0.18)] transition-all duration-200 hover:-translate-y-px">Edit Profile</button>
+                      <button type="button" className="rounded-full border border-[#5BABF0]/30 bg-white px-5 py-2.5 text-sm font-semibold text-[#1A3FA6] transition-all duration-200 hover:-translate-y-px hover:bg-[#5BABF0]/10">Settings</button>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-4 lg:min-w-[310px] lg:max-w-[360px]">
-                  <div className="self-start rounded-full border border-[#e4d5bd] bg-[#f7efe4] px-4 py-2 text-sm text-[#7a6550] lg:self-end">
-                    <span className="font-semibold text-[#8b5e3c]">Current role</span>
-                    <span className="mx-2 text-[#c8a97e]">|</span>
-                    <span className="font-semibold text-[#4B2E2B]">{profile?.headline || "Software Engineer"}</span>
+                  <div className="self-start rounded-full border border-[#F8F9FC] bg-[#F8F9FC] px-4 py-2 text-sm text-[#5BABF0] lg:self-end">
+                    <span className="font-semibold text-[#1A3FA6]">Current role</span>
+                    <span className="mx-2 text-[#5BABF0]">|</span>
+                    <span className="font-semibold text-[#1A3FA6]">{profile?.headline || "Software Engineer"}</span>
                   </div>
-                  <div className="rounded-[22px] border border-[#e6dac7] bg-[#fffaf4] p-4">
+                  <div className="rounded-[22px] border border-[#F8F9FC] bg-[#F8F9FC] p-4">
                     <div className="mb-3 flex items-center justify-between">
-                      <span className="text-sm font-semibold uppercase tracking-[0.05em] text-[#8b5e3c]">Skills</span>
-                      <span className="text-sm font-semibold text-[#c9973a]">Featured</span>
+                      <span className="text-sm font-semibold uppercase tracking-[0.05em] text-[#1A3FA6]">Skills</span>
+                      <span className="text-sm font-semibold text-[#5BABF0]">Featured</span>
                     </div>
                     <div className="flex flex-wrap gap-2">
-                      {featuredSkills.length ? featuredSkills.map((skill, index) => <Chip key={skill} tone={index < 4 ? "teach" : "learn"}>{skill}</Chip>) : <span className="text-sm text-[#b08e68]">Add your top skills here</span>}
+                      {featuredSkills.length ? featuredSkills.map((skill, index) => <Chip key={skill} tone={index < 4 ? "teach" : "learn"}>{skill}</Chip>) : <span className="text-sm text-[#5BABF0]">Add your top skills here</span>}
                     </div>
                   </div>
                 </div>
@@ -262,9 +262,9 @@ export default function ProfilePage() {
                   { title: "Share your story", text: profile?.bio || "Use your bio to tell people what you build, teach, and want to learn." },
                   { title: "Update", text: `Teaching ${teachSkills.length} skills and learning ${learnSkills.length} right now.` },
                 ].map((item) => (
-                  <div key={item.title} className="rounded-[20px] border border-[#ece2d2] bg-[#f8f3ea] px-4 py-4 shadow-[0_4px_16px_rgba(60,35,10,0.05)]">
-                    <h3 className="text-base font-bold text-[#4B2E2B]">{item.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-[#7a6550]">{item.text}</p>
+                  <div key={item.title} className="rounded-[20px] border border-[#F8F9FC] bg-[#F8F9FC] px-4 py-4 shadow-[0_4px_16px_rgba(26,63,166,0.05)]">
+                    <h3 className="text-base font-bold text-[#1A3FA6]">{item.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-[#5BABF0]">{item.text}</p>
                   </div>
                 ))}
               </div>
@@ -273,65 +273,65 @@ export default function ProfilePage() {
 
           <div className="grid gap-6 lg:grid-cols-[1fr_1.55fr]">
             <div className="flex flex-col gap-6">
-              <section className="rounded-xl border border-[#ddd0b8] bg-white p-6 shadow-[0_4px_20px_rgba(60,35,10,0.10)]">
-                <h2 className="mb-4 border-b border-[#ddd0b8] pb-3 text-base font-bold text-[#3b2a1a]" style={{ fontFamily: "'Libre Baskerville', serif" }}>Cover Photo</h2>
+              <section className="rounded-xl border border-[#5BABF0] bg-white p-6 shadow-[0_4px_20px_rgba(26,63,166,0.10)]">
+                <h2 className="mb-4 border-b border-[#5BABF0] pb-3 text-base font-bold text-[#1A3FA6]" style={{ fontFamily: "'Libre Baskerville', serif" }}>Cover Photo</h2>
                 <form onSubmit={handleCoverSubmit}>
-                  <input className="w-full rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#546b41] focus:bg-white" type="url" placeholder="https://example.com/cover.jpg" value={coverImage} onChange={(event) => setCoverImage(event.target.value)} maxLength={2048} />
-                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-[#546b41] px-3 py-2 text-sm font-bold text-white" disabled={coverLoading}>{coverLoading ? "Saving..." : "Update Cover Photo"}</motion.button>
+                  <input className="w-full rounded-lg border-[1.5px] border-[#5BABF0] bg-[#F8F9FC] px-3 py-2.5 text-sm text-[#0f172a] outline-none transition-all duration-180 placeholder:text-[#5BABF0] focus:border-[#1A3FA6] focus:bg-white" type="url" placeholder="https://example.com/cover.jpg" value={coverImage} onChange={(event) => setCoverImage(event.target.value)} maxLength={2048} />
+                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-[#1A3FA6] px-3 py-2 text-sm font-bold text-white" disabled={coverLoading}>{coverLoading ? "Saving..." : "Update Cover Photo"}</motion.button>
                 </form>
               </section>
 
-              <section className="rounded-xl border border-[#ddd0b8] bg-white p-6 shadow-[0_4px_20px_rgba(60,35,10,0.10)]">
-                <h2 className="mb-4 border-b border-[#ddd0b8] pb-3 text-base font-bold text-[#3b2a1a]" style={{ fontFamily: "'Libre Baskerville', serif" }}>Profile Photo</h2>
+              <section className="rounded-xl border border-[#5BABF0] bg-white p-6 shadow-[0_4px_20px_rgba(26,63,166,0.10)]">
+                <h2 className="mb-4 border-b border-[#5BABF0] pb-3 text-base font-bold text-[#1A3FA6]" style={{ fontFamily: "'Libre Baskerville', serif" }}>Profile Photo</h2>
                 <form onSubmit={handleAvatarSubmit}>
-                  <input ref={avatarInputRef} className="w-full rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#546b41] focus:bg-white" type="url" placeholder="https://example.com/photo.jpg" value={image} onChange={(event) => setImage(event.target.value)} maxLength={2048} />
-                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-[#546b41] px-3 py-2 text-sm font-bold text-white" disabled={avatarLoading}>{avatarLoading ? "Saving..." : "Update Photo"}</motion.button>
+                  <input ref={avatarInputRef} className="w-full rounded-lg border-[1.5px] border-[#5BABF0] bg-[#F8F9FC] px-3 py-2.5 text-sm text-[#0f172a] outline-none transition-all duration-180 placeholder:text-[#5BABF0] focus:border-[#1A3FA6] focus:bg-white" type="url" placeholder="https://example.com/photo.jpg" value={image} onChange={(event) => setImage(event.target.value)} maxLength={2048} />
+                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-[#1A3FA6] px-3 py-2 text-sm font-bold text-white" disabled={avatarLoading}>{avatarLoading ? "Saving..." : "Update Photo"}</motion.button>
                 </form>
               </section>
 
-              <section className="rounded-xl border border-[#ddd0b8] bg-white p-6 shadow-[0_4px_20px_rgba(60,35,10,0.10)]">
-                <h2 className="mb-4 border-b border-[#ddd0b8] pb-3 text-base font-bold text-[#3b2a1a]" style={{ fontFamily: "'Libre Baskerville', serif" }}>About Me</h2>
+              <section className="rounded-xl border border-[#5BABF0] bg-white p-6 shadow-[0_4px_20px_rgba(26,63,166,0.10)]">
+                <h2 className="mb-4 border-b border-[#5BABF0] pb-3 text-base font-bold text-[#1A3FA6]" style={{ fontFamily: "'Libre Baskerville', serif" }}>About Me</h2>
                 <form onSubmit={handleBioSubmit}>
-                  <textarea className="min-h-[120px] w-full resize-y rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-3 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#546b41] focus:bg-white" placeholder="Tell the community about yourself..." value={bio} onChange={(event) => setBio(event.target.value)} maxLength={600} rows={6} />
-                  <div className="mt-1 text-right text-xs text-[#7a6550]">{bio.length}/600</div>
-                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-[#546b41] px-3 py-2 text-sm font-bold text-white" disabled={bioLoading}>{bioLoading ? "Saving..." : "Save Bio"}</motion.button>
+                  <textarea className="min-h-[120px] w-full resize-y rounded-lg border-[1.5px] border-[#5BABF0] bg-[#F8F9FC] px-3 py-3 text-sm text-[#0f172a] outline-none transition-all duration-180 placeholder:text-[#5BABF0] focus:border-[#1A3FA6] focus:bg-white" placeholder="Tell the community about yourself..." value={bio} onChange={(event) => setBio(event.target.value)} maxLength={600} rows={6} />
+                  <div className="mt-1 text-right text-xs text-[#5BABF0]">{bio.length}/600</div>
+                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-[#1A3FA6] px-3 py-2 text-sm font-bold text-white" disabled={bioLoading}>{bioLoading ? "Saving..." : "Save Bio"}</motion.button>
                 </form>
               </section>
             </div>
 
             <div className="flex flex-col gap-6">
-              <section className="rounded-xl border border-[#ddd0b8] bg-white p-6 shadow-[0_4px_20px_rgba(60,35,10,0.10)]">
-                <h2 className="mb-4 border-b border-[#ddd0b8] pb-3 text-base font-bold text-[#3b2a1a]" style={{ fontFamily: "'Libre Baskerville', serif" }}>Basic Information</h2>
+              <section className="rounded-xl border border-[#5BABF0] bg-white p-6 shadow-[0_4px_20px_rgba(26,63,166,0.10)]">
+                <h2 className="mb-4 border-b border-[#5BABF0] pb-3 text-base font-bold text-[#1A3FA6]" style={{ fontFamily: "'Libre Baskerville', serif" }}>Basic Information</h2>
                 <form onSubmit={handleBasicSubmit}>
                   <div className="grid gap-4 md:grid-cols-2">
-                    <input className="w-full rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#546b41] focus:bg-white" value={name} onChange={(event) => setName(event.target.value)} placeholder="Your full name" />
-                    <input className="w-full rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#546b41] focus:bg-white" value={location} onChange={(event) => setLocation(event.target.value)} placeholder="City, Country" />
+                    <input className="w-full rounded-lg border-[1.5px] border-[#5BABF0] bg-[#F8F9FC] px-3 py-2.5 text-sm text-[#0f172a] outline-none transition-all duration-180 placeholder:text-[#5BABF0] focus:border-[#1A3FA6] focus:bg-white" value={name} onChange={(event) => setName(event.target.value)} placeholder="Your full name" />
+                    <input className="w-full rounded-lg border-[1.5px] border-[#5BABF0] bg-[#F8F9FC] px-3 py-2.5 text-sm text-[#0f172a] outline-none transition-all duration-180 placeholder:text-[#5BABF0] focus:border-[#1A3FA6] focus:bg-white" value={location} onChange={(event) => setLocation(event.target.value)} placeholder="City, Country" />
                   </div>
-                  <input className="mt-4 w-full rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#546b41] focus:bg-white" value={headline} onChange={(event) => setHeadline(event.target.value)} placeholder="Professional headline" />
-                  <input className="mt-4 w-full rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#546b41] focus:bg-white" value={availability} onChange={(event) => setAvailability(event.target.value)} placeholder="Availability" />
-                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-[#546b41] px-3 py-2 text-sm font-bold text-white" disabled={basicLoading}>{basicLoading ? "Saving..." : "Save Changes"}</motion.button>
+                  <input className="mt-4 w-full rounded-lg border-[1.5px] border-[#5BABF0] bg-[#F8F9FC] px-3 py-2.5 text-sm text-[#0f172a] outline-none transition-all duration-180 placeholder:text-[#5BABF0] focus:border-[#1A3FA6] focus:bg-white" value={headline} onChange={(event) => setHeadline(event.target.value)} placeholder="Professional headline" />
+                  <input className="mt-4 w-full rounded-lg border-[1.5px] border-[#5BABF0] bg-[#F8F9FC] px-3 py-2.5 text-sm text-[#0f172a] outline-none transition-all duration-180 placeholder:text-[#5BABF0] focus:border-[#1A3FA6] focus:bg-white" value={availability} onChange={(event) => setAvailability(event.target.value)} placeholder="Availability" />
+                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-[#1A3FA6] px-3 py-2 text-sm font-bold text-white" disabled={basicLoading}>{basicLoading ? "Saving..." : "Save Changes"}</motion.button>
                 </form>
               </section>
 
-              <section className="rounded-xl border border-[#ddd0b8] bg-white p-6 shadow-[0_4px_20px_rgba(60,35,10,0.10)]">
-                <h2 className="mb-4 border-b border-[#ddd0b8] pb-3 text-base font-bold text-[#3b2a1a]" style={{ fontFamily: "'Libre Baskerville', serif" }}>Skills Exchange</h2>
+              <section className="rounded-xl border border-[#5BABF0] bg-white p-6 shadow-[0_4px_20px_rgba(26,63,166,0.10)]">
+                <h2 className="mb-4 border-b border-[#5BABF0] pb-3 text-base font-bold text-[#1A3FA6]" style={{ fontFamily: "'Libre Baskerville', serif" }}>Skills Exchange</h2>
                 <form onSubmit={handleSkillsSubmit}>
                   <div>
                     <div className="flex gap-2">
-                      <input className="flex-1 rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#546b41] focus:bg-white" value={teachInput} onChange={(event) => setTeachInput(event.target.value)} placeholder="Add a skill you can teach" />
-                      <button type="button" className="rounded-lg border-[1.5px] border-[#546b41] px-3 text-sm font-semibold text-[#546b41]" onClick={() => addSkill("teach", teachInput)}>+ Add</button>
+                      <input className="flex-1 rounded-lg border-[1.5px] border-[#5BABF0] bg-[#F8F9FC] px-3 py-2.5 text-sm text-[#0f172a] outline-none transition-all duration-180 placeholder:text-[#5BABF0] focus:border-[#1A3FA6] focus:bg-white" value={teachInput} onChange={(event) => setTeachInput(event.target.value)} placeholder="Add a skill you can teach" />
+                      <button type="button" className="rounded-lg border-[1.5px] border-[#1A3FA6] px-3 text-sm font-semibold text-[#1A3FA6]" onClick={() => addSkill("teach", teachInput)}>+ Add</button>
                     </div>
                     <div className="mt-3 flex flex-wrap gap-2">{teachSkills.map((skill) => <Chip key={skill} tone="teach">{skill}</Chip>)}</div>
                   </div>
-                  <div className="my-5 h-px bg-[#ddd0b8]" />
+                  <div className="my-5 h-px bg-[#5BABF0]" />
                   <div>
                     <div className="flex gap-2">
-                      <input className="flex-1 rounded-lg border-[1.5px] border-[#ddd0b8] bg-[#f2e9db] px-3 py-2.5 text-sm text-[#2e1e0f] outline-none transition-all duration-180 placeholder:text-[#c8a97e] focus:border-[#546b41] focus:bg-white" value={learnInput} onChange={(event) => setLearnInput(event.target.value)} placeholder="Add a skill you want to learn" />
-                      <button type="button" className="rounded-lg border-[1.5px] border-[#dcccac] px-3 text-sm font-semibold text-[#dcccac]" onClick={() => addSkill("learn", learnInput)}>+ Add</button>
+                      <input className="flex-1 rounded-lg border-[1.5px] border-[#5BABF0] bg-[#F8F9FC] px-3 py-2.5 text-sm text-[#0f172a] outline-none transition-all duration-180 placeholder:text-[#5BABF0] focus:border-[#1A3FA6] focus:bg-white" value={learnInput} onChange={(event) => setLearnInput(event.target.value)} placeholder="Add a skill you want to learn" />
+                      <button type="button" className="rounded-lg border-[1.5px] border-[#5BABF0] px-3 text-sm font-semibold text-[#5BABF0]" onClick={() => addSkill("learn", learnInput)}>+ Add</button>
                     </div>
                     <div className="mt-3 flex flex-wrap gap-2">{learnSkills.map((skill) => <Chip key={skill} tone="learn">{skill}</Chip>)}</div>
                   </div>
-                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-[#546b41] px-3 py-2 text-sm font-bold text-white" disabled={skillsLoading}>{skillsLoading ? "Saving..." : "Save Skills"}</motion.button>
+                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-[#1A3FA6] px-3 py-2 text-sm font-bold text-white" disabled={skillsLoading}>{skillsLoading ? "Saving..." : "Save Skills"}</motion.button>
                 </form>
               </section>
             </div>
