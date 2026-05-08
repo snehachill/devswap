@@ -8,7 +8,6 @@ import { usePathname } from "next/navigation";
 import {
   Menu,
   X,
-  Search,
   LogOut,
   LayoutDashboard,
   User,
@@ -56,19 +55,6 @@ function NavLink({ href, label, active, onClick }) {
         }`}
       />
     </Link>
-  );
-}
-
-function IconButton({ label, children }) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      suppressHydrationWarning
-      className="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-all duration-300 hover:bg-[#1A3FA6]/10 hover:text-[#1A3FA6]"
-    >
-      {children}
-    </button>
   );
 }
 
@@ -180,23 +166,20 @@ function MobileMenu({ open, session, onClose }) {
           transition={{ duration: 0.3, ease: "easeOut" }}
           className="border-t border-[#5BABF0]/20 bg-white/95 px-5 pb-5 pt-4 backdrop-blur-[18px] md:hidden"
         >
-          <nav className="flex flex-col gap-1">
-            {NAV_LINKS.map((item) => (
-              <NavLink
-                key={item.label}
-                href={item.href}
-                label={item.label}
-                active={false}
-                onClick={onClose}
-              />
-            ))}
-          </nav>
+          {!session ? (
+            <nav className="flex flex-col gap-1">
+              {NAV_LINKS.map((item) => (
+                <NavLink
+                  key={item.label}
+                  href={item.href}
+                  label={item.label}
+                  active={false}
+                  onClick={onClose}
+                />
+              ))}
+            </nav>
+          ) : null}
 
-          <div className="mt-5 flex items-center gap-2">
-            <IconButton label="Search">
-              <Search size={17} strokeWidth={1.9} />
-            </IconButton>
-          </div>
 
           <div className="mt-5 flex flex-col gap-3">
             {session ? (
@@ -285,45 +268,41 @@ export default function Navbar({ session }) {
     >
       <div className="mx-auto max-w-7xl rounded-2xl border border-white/70 bg-white/75 shadow-[0_12px_34px_rgba(26,63,166,0.10)] backdrop-blur-xl transition-all duration-300 ease-out">
         <div className="mx-auto flex h-17 items-center justify-between px-5 sm:px-8 lg:px-12">
-          <div className="flex min-w-0 items-center">
+          <div className={`min-w-0 items-center ${session ? "hidden sm:flex" : "flex"}`}>
             <DevSwapLogo />
           </div>
 
-          <nav className="hidden items-center gap-8 md:flex">
-            {NAV_LINKS.map((item) => (
-              <NavLink
-                key={item.label}
-                href={item.href}
-                label={item.label}
-                active={pathname === item.href}
-              />
-            ))}
-          </nav>
+          {!session ? (
+            <nav className="hidden items-center gap-8 md:flex">
+              {NAV_LINKS.map((item) => (
+                <NavLink
+                  key={item.label}
+                  href={item.href}
+                  label={item.label}
+                  active={pathname === item.href}
+                />
+              ))}
+            </nav>
+          ) : null}
 
           <div className="flex items-center gap-1 sm:gap-2">
-            <div className="hidden items-center gap-1 sm:flex">
-              <IconButton label="Search">
-                <Search size={17} strokeWidth={1.9} />
-              </IconButton>
-            </div>
-
             {session ? (
               <>
                 <Link
                   href="/user/requests"
-                  className="hidden min-h-10 items-center rounded-full border border-[#5BABF0]/30 bg-[#5BABF0]/10 px-5 text-sm font-medium text-[#5BABF0] transition-all duration-300 hover:-translate-y-px hover:bg-[#5BABF0]/20 sm:inline-flex"
+                  className="inline-flex min-h-10 items-center rounded-full border border-[#5BABF0]/30 bg-[#5BABF0]/10 px-4 text-sm font-medium text-[#5BABF0] transition-all duration-300 hover:-translate-y-px hover:bg-[#5BABF0]/20 sm:px-5"
                 >
                   Requests
                 </Link>
 
                 <Link
                   href="/user/discover"
-                  className="hidden min-h-10 items-center rounded-full bg-[#1A3FA6] px-5 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-px hover:bg-[#4A90E8] sm:inline-flex"
+                  className="inline-flex min-h-10 items-center rounded-full bg-[#1A3FA6] px-4 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-px hover:bg-[#4A90E8] sm:px-5"
                 >
                   Discover
                 </Link>
 
-                <div ref={dropdownRef} className="relative hidden sm:block">
+                <div ref={dropdownRef} className="relative block">
                   <button
                     type="button"
                     suppressHydrationWarning
@@ -363,7 +342,9 @@ export default function Navbar({ session }) {
               suppressHydrationWarning
               onClick={() => setMobileOpen((value) => !value)}
               aria-label="Toggle navigation"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[#1A3FA6] transition-all duration-300 hover:bg-[#1A3FA6]/10 md:hidden"
+              className={`h-10 w-10 items-center justify-center rounded-full text-[#1A3FA6] transition-all duration-300 hover:bg-[#1A3FA6]/10 md:hidden ${
+                session ? "hidden" : "inline-flex"
+              }`}
             >
               {mobileOpen ? <X size={19} /> : <Menu size={19} />}
             </button>
