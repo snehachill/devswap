@@ -68,11 +68,11 @@ function formatMessageDateLabel(value) {
 
 function initialsTone(seed = "") {
   const tones = [
-    "from-[#1A3FA6] to-[#5BABF0]",
-    "from-[#5BABF0] to-[#1A3FA6]",
-    "from-[#1A3FA6] to-[#1A3FA6]",
-    "from-[#1A3FA6] to-[#1A3FA6]",
-    "from-[#5BABF0] to-[#5BABF0]",
+    "from-[#11201b] to-[#D89216]",
+    "from-[#D89216] to-[#11201b]",
+    "from-[#11201b] to-[#11201b]",
+    "from-[#11201b] to-[#11201b]",
+    "from-[#D89216] to-[#D89216]",
   ];
 
   const sum = seed.split("").reduce((total, char) => total + char.charCodeAt(0), 0);
@@ -89,7 +89,7 @@ function ConversationAvatar({ initials, online, seed }) {
       </div>
       <span
         className={`absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-white ${
-          online ? "bg-[#5BABF0]" : "bg-[#5BABF0]"
+          online ? "bg-[#D89216]" : "bg-[#D89216]"
         }`}
       />
     </div>
@@ -99,11 +99,11 @@ function ConversationAvatar({ initials, online, seed }) {
 function DateSeparator({ label }) {
   return (
     <div className="my-5 flex items-center gap-3">
-      <div className="h-px flex-1 bg-[#5BABF0]" />
-      <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#64748b]">
+      <div className="h-px flex-1 bg-[#D89216]" />
+      <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#72766f]">
         {label}
       </span>
-      <div className="h-px flex-1 bg-[#5BABF0]" />
+      <div className="h-px flex-1 bg-[#D89216]" />
     </div>
   );
 }
@@ -117,12 +117,12 @@ function TypingBubble({ initials, seed }) {
       className="flex items-end gap-3"
     >
       <ConversationAvatar initials={initials} online seed={seed} />
-      <div className="rounded-[20px] rounded-bl-md border border-[#5BABF0] bg-white px-4 py-3 shadow-sm">
+      <div className="rounded-[20px] rounded-bl-md border border-[#e7e8e4] bg-white px-4 py-3 shadow-sm">
         <div className="flex items-center gap-1.5">
           {[0, 1, 2].map((index) => (
             <motion.span
               key={index}
-              className="h-2 w-2 rounded-full bg-[#5BABF0]"
+              className="h-2 w-2 rounded-full bg-[#D89216]"
               animate={{ y: [0, -4, 0] }}
               transition={{
                 duration: 0.8,
@@ -153,20 +153,20 @@ function ChatBubble({ message, isMe, showAvatar, avatarInitials, seed }) {
         <div
           className={`px-4 py-2.5 text-[13px] leading-6 shadow-sm ${
             isMe
-              ? "rounded-[22px] rounded-br-md bg-gradient-to-br from-[#1A3FA6] to-[#5BABF0] text-white"
-              : "rounded-[22px] rounded-bl-md border border-[#5BABF0] bg-white text-[#0f172a]"
+              ? "rounded-[22px] rounded-br-md bg-gradient-to-br from-[#11201b] to-[#D89216] text-white"
+              : "rounded-[22px] rounded-bl-md border border-[#e7e8e4] bg-white text-[#11201b]"
           }`}
         >
           {message.text}
         </div>
 
-        <div className={`mt-1 flex items-center gap-1.5 px-1 text-[10px] text-[#64748b] ${isMe ? "self-end" : "self-start"}`}>
+        <div className={`mt-1 flex items-center gap-1.5 px-1 text-[10px] text-[#72766f] ${isMe ? "self-end" : "self-start"}`}>
           <span>{message.timestamp}</span>
           {isMe ? (
             <>
               {message.status === "sent" ? <span>✓</span> : null}
-              {message.status === "delivered" ? <span className="text-[#64748b]">✓✓</span> : null}
-              {message.status === "read" ? <span className="text-[#4A90E8]">✓✓</span> : null}
+              {message.status === "delivered" ? <span className="text-[#72766f]">✓✓</span> : null}
+              {message.status === "read" ? <span className="text-[#11201b]">✓✓</span> : null}
             </>
           ) : null}
         </div>
@@ -178,16 +178,16 @@ function ChatBubble({ message, isMe, showAvatar, avatarInitials, seed }) {
 function EmptyListState() {
   return (
     <div className="flex h-full flex-col items-center justify-center px-8 text-center">
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F8F9FC] text-[#1A3FA6]">
+      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#ffffff] text-[#11201b]">
         <MessageSquareText size={22} />
       </div>
-      <h3 className="mt-5 text-lg font-semibold text-[#0f172a]">No swaps yet</h3>
-      <p className="mt-2 max-w-xs text-sm leading-6 text-[#64748b]">
+      <h3 className="mt-5 text-lg font-semibold text-[#11201b]">No swaps yet</h3>
+      <p className="mt-2 max-w-xs text-sm leading-6 text-[#72766f]">
         Accept a swap request to start exchanging skills and chatting with your partner.
       </p>
       <Link
         href="/user/requests"
-        className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-[#1A3FA6] px-5 text-sm font-semibold text-white transition hover:bg-[#4A90E8]"
+        className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-[#11201b] px-5 text-sm font-semibold text-white transition hover:bg-[#11201b]"
       >
         Go to Requests
       </Link>
@@ -198,13 +198,13 @@ function EmptyListState() {
 function EmptyChatState() {
   return (
     <div className="hidden h-full flex-col items-center justify-center px-8 text-center md:flex">
-      <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-[#1A3FA6] to-[#4A90E8] text-white shadow-lg shadow-[#1A3FA6]/20">
+      <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-[#11201b] to-[#11201b] text-white shadow-lg shadow-[#11201b]/20">
         <MessageSquareText size={28} />
       </div>
-      <h2 className="mt-6 text-2xl font-semibold text-[#0f172a]" style={{ fontFamily: "var(--font-dm-serif), serif" }}>
+      <h2 className="mt-6 text-2xl font-semibold text-[#11201b]" style={{ fontFamily: "var(--font-dm-serif), serif" }}>
         Select a swap to start chatting
       </h2>
-      <p className="mt-3 max-w-md text-sm leading-7 text-[#64748b]">
+      <p className="mt-3 max-w-md text-sm leading-7 text-[#72766f]">
         Pick one of your swap partners from the left to continue the conversation without leaving this page.
       </p>
     </div>
@@ -461,16 +461,16 @@ export default function SwapsChatClient({ initialData }) {
 
   function renderListPanel() {
     return (
-      <div className="flex h-full min-h-0 flex-col overflow-hidden border-r border-[#5BABF0] bg-[#F8F9FC]">
-      <div className="shrink-0 border-b border-[#5BABF0] px-5 pb-4 pt-5">
+      <div className="flex h-full min-h-0 flex-col overflow-hidden border-r border-[#e7e8e4] bg-[#ffffff]">
+      <div className="shrink-0 border-b border-[#e7e8e4] px-5 pb-4 pt-5">
         <div className="flex items-center gap-3">
           <h1
-            className="text-[1.9rem] font-semibold leading-none text-[#0f172a]"
+            className="text-[1.9rem] font-semibold leading-none text-[#11201b]"
             style={{ fontFamily: "var(--font-dm-serif), serif" }}
           >
             Swaps
           </h1>
-          <span className="rounded-full bg-[#F8F9FC] px-2.5 py-1 text-[11px] font-semibold text-[#1A3FA6]">
+          <span className="rounded-full bg-[#ffffff] px-2.5 py-1 text-[11px] font-semibold text-[#11201b]">
             {conversations.length}
           </span>
         </div>
@@ -478,13 +478,13 @@ export default function SwapsChatClient({ initialData }) {
         <div className="relative mt-4">
           <Search
             size={16}
-            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#64748b]"
+            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#72766f]"
           />
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search by name or skill"
-            className="w-full rounded-2xl border border-[#5BABF0] bg-white py-3 pl-11 pr-11 text-sm text-[#0f172a] outline-none transition focus:border-[#5BABF0] focus:ring-2 focus:ring-[#5BABF0]"
+            className="w-full rounded-2xl border border-[#e7e8e4] bg-white py-3 pl-11 pr-11 text-sm text-[#11201b] outline-none transition focus:border-[#e7e8e4] focus:ring-2 focus:ring-[#D89216]"
           />
           <AnimatePresence>
             {query ? (
@@ -495,7 +495,7 @@ export default function SwapsChatClient({ initialData }) {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.85 }}
                 onClick={() => setQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-[#64748b] transition hover:bg-[#F8F9FC] hover:text-[#1A3FA6]"
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-[#72766f] transition hover:bg-[#ffffff] hover:text-[#11201b]"
               >
                 <X size={15} />
               </motion.button>
@@ -519,13 +519,13 @@ export default function SwapsChatClient({ initialData }) {
                   onClick={() => handleSelectConversation(conversation.id)}
                   className={`relative flex w-full items-start gap-3 rounded-2xl px-3 py-3 text-left transition ${
                     isActive
-                      ? "bg-[#F8F9FC]"
-                      : "hover:bg-[#F8F9FC]"
+                      ? "bg-[#ffffff]"
+                      : "hover:bg-[#ffffff]"
                   }`}
                 >
                   <span
                     className={`absolute bottom-3 left-0 top-3 w-1 rounded-full ${
-                      isActive ? "bg-[#5BABF0]" : "bg-transparent"
+                      isActive ? "bg-[#D89216]" : "bg-transparent"
                     }`}
                   />
 
@@ -538,14 +538,14 @@ export default function SwapsChatClient({ initialData }) {
                   <div className="min-w-0 flex-1 pl-1">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="truncate text-[14px] font-semibold text-[#0f172a]">
+                        <p className="truncate text-[14px] font-semibold text-[#11201b]">
                           {conversation.partner.name}
                         </p>
                         <p
                           className={`mt-1 truncate text-[12px] ${
                             conversation.preview
-                              ? "text-[#1A3FA6]"
-                              : "italic text-[#64748b]"
+                              ? "text-[#11201b]"
+                              : "italic text-[#72766f]"
                           }`}
                         >
                           {conversation.preview || "Start the conversation..."}
@@ -553,11 +553,11 @@ export default function SwapsChatClient({ initialData }) {
                       </div>
 
                       <div className="shrink-0 text-right">
-                        <p className="text-[10px] text-[#64748b]">
+                        <p className="text-[10px] text-[#72766f]">
                           {conversation.previewTimestamp || ""}
                         </p>
                         {conversation.unreadCount ? (
-                          <span className="mt-1 inline-flex min-w-5 items-center justify-center rounded-full bg-[#F8F9FC] px-1.5 py-0.5 text-[10px] font-semibold text-[#1A3FA6]">
+                          <span className="mt-1 inline-flex min-w-5 items-center justify-center rounded-full bg-[#ffffff] px-1.5 py-0.5 text-[10px] font-semibold text-[#11201b]">
                             {conversation.unreadCount}
                           </span>
                         ) : null}
@@ -565,10 +565,10 @@ export default function SwapsChatClient({ initialData }) {
                     </div>
 
                     <div className="mt-2 flex flex-wrap gap-2">
-                      <span className="rounded-full bg-[#F8F9FC] px-2 py-1 text-[10px] font-semibold text-[#1A3FA6]">
+                      <span className="rounded-full bg-[#ffffff] px-2 py-1 text-[10px] font-semibold text-[#11201b]">
                         Teaches {conversation.partner.teaches}
                       </span>
-                      <span className="rounded-full bg-[#F8F9FC] px-2 py-1 text-[10px] font-semibold text-[#1A3FA6]">
+                      <span className="rounded-full bg-[#ffffff] px-2 py-1 text-[10px] font-semibold text-[#11201b]">
                         Learns {conversation.partner.learns}
                       </span>
                     </div>
@@ -578,7 +578,7 @@ export default function SwapsChatClient({ initialData }) {
             })}
           </div>
         ) : (
-          <div className="flex h-full items-center justify-center px-8 text-center text-sm text-[#64748b]">
+          <div className="flex h-full items-center justify-center px-8 text-center text-sm text-[#72766f]">
             No swap partners match that search yet.
           </div>
         )}
@@ -593,13 +593,13 @@ export default function SwapsChatClient({ initialData }) {
     }
 
     return (
-      <div className="flex h-full min-h-0 flex-col overflow-hidden bg-[#F8F9FC]">
-      <div className="shrink-0 border-b border-[#5BABF0] bg-[#FFFFFF]">
+      <div className="flex h-full min-h-0 flex-col overflow-hidden bg-[#ffffff]">
+      <div className="shrink-0 border-b border-[#e7e8e4] bg-[#FFFFFF]">
         <div className="flex items-center gap-3 px-4 py-4">
           <button
             type="button"
             onClick={handleBackToList}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[#1A3FA6] transition hover:bg-[#F8F9FC] md:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[#11201b] transition hover:bg-[#ffffff] md:hidden"
           >
             <ArrowLeft size={18} />
           </button>
@@ -611,10 +611,10 @@ export default function SwapsChatClient({ initialData }) {
           />
 
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold text-[#0f172a]">
+            <p className="truncate text-sm font-semibold text-[#11201b]">
               {selectedChat.partner.name}
             </p>
-            <p className="truncate text-xs text-[#64748b]">
+            <p className="truncate text-xs text-[#72766f]">
               {selectedChat.partner.online ? "Active now" : selectedChat.partner.lastSeen}
             </p>
           </div>
@@ -624,7 +624,7 @@ export default function SwapsChatClient({ initialData }) {
               <button
                 key={index}
                 type="button"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[#1A3FA6] transition hover:bg-[#F8F9FC] hover:text-[#0f172a]"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[#11201b] transition hover:bg-[#ffffff] hover:text-[#11201b]"
               >
                 <Icon size={18} />
               </button>
@@ -638,9 +638,9 @@ export default function SwapsChatClient({ initialData }) {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="overflow-hidden border-t border-[#5BABF0] bg-[#FFFFFF]"
+              className="overflow-hidden border-t border-[#e7e8e4] bg-[#FFFFFF]"
             >
-              <div className="flex items-center justify-between gap-4 px-4 py-2.5 text-sm text-[#64748b]">
+              <div className="flex items-center justify-between gap-4 px-4 py-2.5 text-sm text-[#72766f]">
                 <p className="truncate">
                   {selectedChat.partner.name} teaches {selectedChat.swap.receive} · You teach{" "}
                   {selectedChat.swap.offer}
@@ -648,7 +648,7 @@ export default function SwapsChatClient({ initialData }) {
                 <button
                   type="button"
                   onClick={() => setShowBanner(false)}
-                  className="rounded-full p-1 transition hover:bg-[#F8F9FC]"
+                  className="rounded-full p-1 transition hover:bg-[#ffffff]"
                 >
                   <X size={14} />
                 </button>
@@ -698,7 +698,7 @@ export default function SwapsChatClient({ initialData }) {
                   setInput(reply);
                   textareaRef.current?.focus();
                 }}
-                className="shrink-0 rounded-full border border-[#5BABF0] bg-white px-3 py-1.5 text-[11px] font-medium text-[#1A3FA6] transition hover:bg-[#F8F9FC]"
+                className="shrink-0 rounded-full border border-[#e7e8e4] bg-white px-3 py-1.5 text-[11px] font-medium text-[#11201b] transition hover:bg-[#ffffff]"
               >
                 {reply}
               </button>
@@ -707,11 +707,11 @@ export default function SwapsChatClient({ initialData }) {
         </div>
       ) : null}
 
-      <div className="shrink-0 border-t border-[#5BABF0] bg-[#FFFFFF] px-4 py-3">
-        <div className="flex items-end gap-2 rounded-[24px] border border-[#5BABF0] bg-white px-3 py-2 shadow-sm focus-within:ring-2 focus-within:ring-[#5BABF0]">
+      <div className="shrink-0 border-t border-[#e7e8e4] bg-[#FFFFFF] px-4 py-3">
+        <div className="flex items-end gap-2 rounded-[24px] border border-[#e7e8e4] bg-white px-3 py-2 shadow-sm focus-within:ring-2 focus-within:ring-[#D89216]">
           <button
             type="button"
-            className="mb-1 inline-flex h-9 w-9 items-center justify-center rounded-full text-[#1A3FA6] transition hover:bg-[#F8F9FC]"
+            className="mb-1 inline-flex h-9 w-9 items-center justify-center rounded-full text-[#11201b] transition hover:bg-[#ffffff]"
           >
             <Paperclip size={17} />
           </button>
@@ -724,7 +724,7 @@ export default function SwapsChatClient({ initialData }) {
               onChange={(event) => setInput(event.target.value)}
               onKeyDown={handleInputKeyDown}
               placeholder="Type a message"
-              className="max-h-[120px] min-h-[24px] w-full resize-none overflow-y-auto bg-transparent pr-10 pt-[7px] text-sm leading-6 text-[#0f172a] outline-none placeholder:text-[#64748b]"
+              className="max-h-[120px] min-h-[24px] w-full resize-none overflow-y-auto bg-transparent pr-10 pt-[7px] text-sm leading-6 text-[#11201b] outline-none placeholder:text-[#72766f]"
             />
           </div>
 
@@ -740,8 +740,8 @@ export default function SwapsChatClient({ initialData }) {
               transition={{ duration: 0.18, ease }}
               className={`mb-1 inline-flex h-10 w-10 items-center justify-center rounded-full transition ${
                 input.trim()
-                  ? "bg-gradient-to-br from-[#1A3FA6] to-[#5BABF0] text-white shadow-md"
-                  : "bg-[#5BABF0] text-[#64748b]"
+                  ? "bg-gradient-to-br from-[#11201b] to-[#D89216] text-white shadow-md"
+                  : "bg-[#D89216] text-[#72766f]"
               }`}
             >
               <Send size={16} />
@@ -759,26 +759,26 @@ export default function SwapsChatClient({ initialData }) {
         position="top-right"
         toastOptions={{
           style: {
-            border: "1px solid #5BABF0",
+            border: "1px solid #D89216",
             background: "#FFFFFF",
-            color: "#0f172a",
+            color: "#11201b",
           },
         }}
       />
 
-      <div className="fixed inset-0 h-dvh overflow-hidden bg-[radial-gradient(circle_at_top_left,rgba(26,63,166,0.18),rgba(91,171,240,0.12)_28%),linear-gradient(180deg,#F8F9FC_0%,#F8F9FC_100%)]">
+      <div className="fixed inset-0 h-dvh overflow-hidden bg-[radial-gradient(circle_at_top_left,rgba(17,32,27,0.18),rgba(216,146,22,0.12)_28%),linear-gradient(180deg,#ffffff_0%,#ffffff_100%)]">
         <div className="h-full overflow-hidden p-2 md:p-3">
-          <div className="grid h-full min-h-0 overflow-hidden rounded-[28px] border border-[#5BABF0] bg-white shadow-[0_18px_55px_rgba(26,63,166,0.12)] md:grid-cols-[360px_minmax(0,1fr)]">
+          <div className="grid h-full min-h-0 overflow-hidden rounded-[28px] border border-[#e7e8e4] bg-white shadow-[0_18px_55px_rgba(17,32,27,0.12)] md:grid-cols-[360px_minmax(0,1fr)]">
             <div className="h-full min-h-0 md:block">{renderListPanel()}</div>
 
             <div className="relative hidden h-full min-h-0 md:block">
               {!isConnected ? (
-                <div className="absolute right-4 top-4 z-10 rounded-full bg-[#F8F9FC] px-3 py-1 text-xs font-semibold text-[#1A3FA6]">
+                <div className="absolute right-4 top-4 z-10 rounded-full bg-[#ffffff] px-3 py-1 text-xs font-semibold text-[#11201b]">
                   Reconnecting...
                 </div>
               ) : null}
               {isThreadLoading ? (
-                <div className="flex h-full items-center justify-center text-sm text-[#64748b]">
+                <div className="flex h-full items-center justify-center text-sm text-[#72766f]">
                   Loading conversation...
                 </div>
               ) : (
@@ -811,7 +811,7 @@ export default function SwapsChatClient({ initialData }) {
                     className="absolute inset-0 z-20 min-h-0 bg-white"
                   >
                     {isThreadLoading ? (
-                      <div className="flex h-full items-center justify-center text-sm text-[#64748b]">
+                      <div className="flex h-full items-center justify-center text-sm text-[#72766f]">
                         Loading conversation...
                       </div>
                     ) : (

@@ -232,3 +232,28 @@ export async function createSwapRequest(input) {
 
   return { success: true, message: "Swap request sent successfully." };
 }
+
+export async function updateDiscoverSkills(input) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return { success: false, error: "Please sign in to update your skills." };
+  }
+
+  const teachSkills = normalizeSkills(input?.teachSkills).slice(0, 20);
+  const learnSkills = normalizeSkills(input?.learnSkills).slice(0, 20);
+
+  await connectToDatabase();
+
+  await User.findByIdAndUpdate(
+    session.user.id,
+    { teachSkills, learnSkills },
+    { new: true },
+  );
+
+  revalidatePath("/user/discover");
+  revalidatePath("/user/profile");
+  revalidatePath("/user/dashboard");
+
+  return { success: true, message: "Skills updated successfully." };
+}

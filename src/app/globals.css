@@ -1,87 +1,98 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #F8F9FC;
-  --bg-soft: #5BABF0;
-  --card: #ffffff;
-  --text: #0f172a;
-  --muted: #64748b;
-  --primary: #1A3FA6;
-  --primary-strong: #4A90E8;
-  --secondary: #5BABF0;
-  --accent: #5BABF0;
-  --ring: rgba(26, 63, 166, 0.35);
+  --font-dm-serif: var(--font-display);
+  --font-dm-sans: var(--font-text);
+  --color-canvas: #ffffff;
+  --color-canvas-warm: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-dark: #11201b;
+  --color-ink: #11201b;
+  --color-ink-muted: #72766f;
+  --color-ink-soft: #8b8c83;
+  --color-hairline: #d4ccbd;
+  --color-hairline-soft: #e5e0d6;
+  --color-primary: #D89216;
+  --color-primary-deep: #8F5E00;
+  --color-accent-green: #D89216;
+  --radius-card: 24px;
+  --radius-pill: 9999px;
+  color-scheme: light;
+  font-family: var(--font-text), sans-serif;
 }
 
 html {
   scroll-behavior: smooth;
+  background: var(--color-canvas);
 }
 
 body {
-  background: radial-gradient(circle at 8% -10%, rgba(91, 171, 240, 0.2) 0%, transparent 34%),
-    radial-gradient(circle at 100% 18%, rgba(26, 63, 166, 0.12) 0%, transparent 32%),
-    radial-gradient(circle at 50% 110%, #F8F9FC 0%, transparent 30%),
-    var(--bg);
-  color: var(--text);
+  margin: 0;
+  min-height: 100vh;
+  background: #ffffff;
+  color: var(--color-ink);
+  font-family: var(--font-text), sans-serif;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: #5BABF0;
-  color: #1A3FA6;
+  background: #D89216;
+  color: #ffffff;
 }
 
-.app-shell {
-  min-height: 100vh;
-  background: transparent;
+.font-display { font-family: var(--font-display), Georgia, serif; }
+
+h1, h2, h3, h4, h5, h6, strong {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.025em;
 }
 
-.ui-card {
-  border: 1px solid #e2e8f0;
-  border-radius: 20px;
-  background: #ffffff;
-  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
+code, kbd, samp, pre, tt {
+  font-family: var(--font-mono), ui-monospace, monospace;
 }
 
-.ui-card-soft {
-  border: 1px solid #5BABF0;
-  border-radius: 20px;
-  background: linear-gradient(180deg, #ffffff 0%, #F8F9FC 100%);
-  box-shadow: 0 8px 24px rgba(26, 63, 166, 0.08);
+::placeholder { color: #9b998f; opacity: 1; }
+button, input, textarea, select { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 2px solid #D89216; outline-offset: 3px; }
+
+
+body:not(:has([data-page="landing"])) main [class*="bg-slate-50"] { background-color: #ffffff; }
+/* Keep app cards quiet by default; use the accent on hover for a clear cue. */
+body:not(:has([data-page="landing"])) main [class*="rounded-"][class*="bg-white"],
+body:not(:has([data-page="landing"])) main [class*="rounded-"][class*="bg-[#ffffff]"] {
+  border-color: #e7e8e4;
+  box-shadow: 0 6px 22px rgb(17 32 27 / 5%);
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
 }
 
-.ui-glass {
-  border: 1px solid rgba(255, 255, 255, 0.65);
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+body:not(:has([data-page="landing"])) main [class*="rounded-"][class*="bg-white"]:hover,
+body:not(:has([data-page="landing"])) main [class*="rounded-"][class*="bg-[#ffffff]"]:hover {
+  border-color: rgb(216 146 22 / 60%);
+  box-shadow: 0 12px 28px rgb(17 32 27 / 8%);
 }
 
-.ui-title {
-  font-size: clamp(1.8rem, 2.8vw, 3.2rem);
-  font-weight: 700;
-  line-height: 1.04;
-  letter-spacing: -0.02em;
+@media (prefers-reduced-motion: reduce) {
+  body:not(:has([data-page="landing"])) main [class*="rounded-"][class*="bg-white"],
+  body:not(:has([data-page="landing"])) main [class*="rounded-"][class*="bg-[#ffffff]"] {
+    transition: none;
+  }
+}
+/* A consistent tactile finish across the existing utility-built screens. */
+input, textarea, select {
+  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+input:focus, textarea:focus, select:focus {
+  box-shadow: 0 0 0 4px rgb(17 32 27 / 9%);
 }
 
-.ui-section {
-  padding-top: 6.5rem;
-  padding-bottom: 6.5rem;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
-
-.ui-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  border-radius: 9999px;
-  border: 1px solid #5BABF0;
-  background: #F8F9FC;
-  color: #1A3FA6;
-  padding: 0.36rem 0.8rem;
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  font-weight: 700;
-}
-
-

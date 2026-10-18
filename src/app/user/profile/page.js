@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import toast, { Toaster } from "react-hot-toast";
 import {
   getProfile,
@@ -13,37 +13,162 @@ import {
   updateCoverImage,
 } from "@/src/actions/user/profileactions";
 
+/* ---------- helpers ---------- */
+
 const initials = (name = "") =>
-  name.split(" ").map((word) => word[0]).join("").toUpperCase().slice(0, 2);
+  name.split(" ").filter(Boolean).map((w) => w[0]).join("").toUpperCase().slice(0, 2);
 
 const normalizeImageUrl = (value = "") => {
   const raw = value.trim();
   if (!raw) return "";
   const extracted = raw.match(/src\s*=\s*["']([^"']+)["']/i)?.[1] ?? raw;
-
   try {
     const parsed = new URL(extracted);
-    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-      return parsed.toString();
-    }
+    if (parsed.protocol === "http:" || parsed.protocol === "https:") return parsed.toString();
   } catch {}
-
   return "";
 };
 
-function Chip({ children, tone = "default" }) {
-  const tones = {
-    default: "bg-[#5BABF0]/10 border-[#5BABF0]/20 text-[#5BABF0]",
-    teach: "bg-[#5BABF0]/10 border-[#5BABF0]/20 text-[#5BABF0]",
-    learn: "bg-[#1A3FA6]/10 border-[#1A3FA6]/20 text-[#1A3FA6]",
-  };
+const sameList = (a, b) => a.length === b.length && a.every((item, i) => item === b[i]);
 
-  return <span className={`inline-flex rounded-full border px-3 py-1.5 text-sm font-semibold ${tones[tone]}`}>{children}</span>;
+const TABS = [
+  { id: "basics", label: "Basics" },
+  { id: "about", label: "About" },
+  { id: "skills", label: "Skills" },
+  { id: "photos", label: "Photos" },
+];
+
+const inputClass =
+  "w-full rounded-xl border-[1.5px] border-[#e7e8e4] bg-white px-4 py-3 text-[17px] text-[#11201b] outline-none transition placeholder:text-[#8F5E00]/60 focus:border-[#11201b] focus:ring-4 focus:ring-[#D89216]/20";
+
+/* ---------- small components ---------- */
+
+function Chip({ children, tone = "teach", onRemove }) {
+  const tones = {
+    teach: "border-[#D89216]/30 bg-[#D89216]/10 text-[#8F5E00]",
+    learn: "border-[#11201b]/20 bg-[#11201b]/5 text-[#11201b]",
+  };
+  return (
+    <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-base font-semibold ${tones[tone]}`}>
+      {children}
+      {onRemove && (
+        <button
+          type="button"
+          onClick={onRemove}
+          aria-label={`Remove ${children}`}
+          className="-mr-1 flex h-5 w-5 items-center justify-center rounded-full text-lg leading-none transition hover:bg-[#11201b]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D89216]"
+        >
+          ×
+        </button>
+      )}
+    </span>
+  );
 }
 
+function Field({ label, hint, children }) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 block text-base font-semibold text-[#11201b]">{label}</span>
+      {children}
+      {hint && <span className="mt-1.5 block text-sm text-[#8F5E00]">{hint}</span>}
+    </label>
+  );
+}
+
+function SaveButton({ loading, disabled, children }) {
+  return (
+    <button
+      type="submit"
+      disabled={loading || disabled}
+      className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-[#11201b] px-6 py-3 text-base font-bold text-white shadow-[0_8px_18px_rgba(17,32,27,0.18)] transition hover:-translate-y-px focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#D89216]/40 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none disabled:hover:translate-y-0 sm:w-auto"
+    >
+      {loading ? "Saving…" : children}
+    </button>
+  );
+}
+
+function SkillEditor({ title, placeholder, tone, skills, setSkills }) {
+  const [value, setValue] = useState("");
+
+  const add = () => {
+    const trimmed = value.trim();
+    if (!trimmed) return;
+    if (!skills.some((s) => s.toLowerCase() === trimmed.toLowerCase())) {
+      setSkills([...skills, trimmed]);
+    }
+    setValue("");
+  };
+
+  return (
+    <div>
+      <h3 className="mb-2 text-base font-semibold text-[#11201b]">{title}</h3>
+      <div className="flex gap-2">
+        <input
+          className={inputClass}
+          value={value}
+          maxLength={30}
+          placeholder={placeholder}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              add();
+            }
+          }}
+        />
+        <button
+          type="button"
+          onClick={add}
+          className="shrink-0 rounded-xl border-[1.5px] border-[#11201b] px-5 text-base font-semibold text-[#11201b] transition hover:bg-[#11201b] hover:text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#D89216]/30"
+        >
+          Add
+        </button>
+      </div>
+      <div className="mt-3 flex min-h-[36px] flex-wrap gap-2">
+        {skills.length ? (
+          skills.map((skill) => (
+            <Chip key={skill} tone={tone} onRemove={() => setSkills(skills.filter((s) => s !== skill))}>
+              {skill}
+            </Chip>
+          ))
+        ) : (
+          <span className="text-base text-[#8F5E00]">Nothing added yet. Type a skill and press Enter.</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ImagePreview({ src, round, label }) {
+  const [broken, setBroken] = useState(false);
+  useEffect(() => setBroken(false), [src]);
+
+  return (
+    <div
+      className={`flex items-center justify-center overflow-hidden border border-[#e7e8e4] bg-[#e7e8e4]/40 ${
+        round ? "h-16 w-16 rounded-full" : "h-16 w-28 rounded-xl"
+      }`}
+    >
+      {src && !broken ? (
+        <Image src={src} alt={label} width={112} height={64} unoptimized onError={() => setBroken(true)} className="h-full w-full object-cover" />
+      ) : (
+        <span className="px-2 text-center text-[13px] text-[#8F5E00]">{src ? "Can't load" : "No image"}</span>
+      )}
+    </div>
+  );
+}
+
+/* ---------- page ---------- */
+
 export default function ProfilePage() {
+  const reduceMotion = useReducedMotion();
+  const editorRef = useRef(null);
+
   const [profile, setProfile] = useState(null);
   const [pageLoading, setPageLoading] = useState(true);
+  const [tab, setTab] = useState("basics");
+  const [saving, setSaving] = useState("");
+
   const [name, setName] = useState("");
   const [headline, setHeadline] = useState("");
   const [location, setLocation] = useState("");
@@ -53,289 +178,360 @@ export default function ProfilePage() {
   const [learnSkills, setLearnSkills] = useState([]);
   const [image, setImage] = useState("");
   const [coverImage, setCoverImage] = useState("");
-  const [teachInput, setTeachInput] = useState("");
-  const [learnInput, setLearnInput] = useState("");
-  const [basicLoading, setBasicLoading] = useState(false);
-  const [bioLoading, setBioLoading] = useState(false);
-  const [skillsLoading, setSkillsLoading] = useState(false);
-  const [avatarLoading, setAvatarLoading] = useState(false);
-  const [coverLoading, setCoverLoading] = useState(false);
-  const avatarInputRef = useRef(null);
+  const [avatarBroken, setAvatarBroken] = useState(false);
 
   const safeImage = normalizeImageUrl(image);
-  const safeCoverImage = normalizeImageUrl(coverImage);
-  const featuredSkills = [...teachSkills.slice(0, 4), ...learnSkills.slice(0, 2)].slice(0, 6);
+  const safeCover = normalizeImageUrl(coverImage);
+
+  useEffect(() => setAvatarBroken(false), [safeImage]);
 
   useEffect(() => {
     (async () => {
       const res = await getProfile();
       if (res.success) {
-        const data = res.data;
-        setProfile(data);
-        setName(data.name);
-        setHeadline(data.headline);
-        setLocation(data.location);
-        setAvailability(data.availability);
-        setBio(data.bio);
-        setTeachSkills(data.teachSkills);
-        setLearnSkills(data.learnSkills);
-        setImage(normalizeImageUrl(data.image || ""));
-        setCoverImage(normalizeImageUrl(data.coverImage || ""));
+        const d = res.data;
+        setProfile(d);
+        setName(d.name ?? "");
+        setHeadline(d.headline ?? "");
+        setLocation(d.location ?? "");
+        setAvailability(d.availability ?? "");
+        setBio(d.bio ?? "");
+        setTeachSkills(d.teachSkills ?? []);
+        setLearnSkills(d.learnSkills ?? []);
+        setImage(normalizeImageUrl(d.image || ""));
+        setCoverImage(normalizeImageUrl(d.coverImage || ""));
       } else {
-        toast.error(res.error || "Could not load profile");
+        toast.error(res.error || "Could not load your profile");
       }
       setPageLoading(false);
     })();
   }, []);
 
-  async function handleBasicSubmit(event) {
-    event.preventDefault();
-    setBasicLoading(true);
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("headline", headline);
-    formData.append("location", location);
-    formData.append("availability", availability);
-    const res = await updateBasicInfo(formData);
-    if (res.success) {
-      setProfile((current) => ({ ...current, name, headline, location, availability }));
-      toast.success(res.message);
-    } else {
-      toast.error(res.error);
+  /* what has changed since the last save */
+  const dirty = {
+    basics:
+      !!profile &&
+      (name !== (profile.name ?? "") ||
+        headline !== (profile.headline ?? "") ||
+        location !== (profile.location ?? "") ||
+        availability !== (profile.availability ?? "")),
+    about: !!profile && bio !== (profile.bio ?? ""),
+    skills:
+      !!profile &&
+      (!sameList(teachSkills, profile.teachSkills ?? []) || !sameList(learnSkills, profile.learnSkills ?? [])),
+    photos:
+      !!profile &&
+      (safeImage !== normalizeImageUrl(profile.image || "") ||
+        safeCover !== normalizeImageUrl(profile.coverImage || "")),
+  };
+
+  const openEditor = (id) => {
+    setTab(id);
+    editorRef.current?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  };
+
+  /* generic save wrapper */
+  async function save(key, task, onSuccess) {
+    setSaving(key);
+    try {
+      const res = await task();
+      if (res.success) {
+        onSuccess();
+        toast.success(res.message || "Saved");
+      } else {
+        toast.error(res.error || "Could not save. Please try again.");
+      }
+    } catch {
+      toast.error("Something went wrong. Please try again.");
     }
-    setBasicLoading(false);
+    setSaving("");
   }
 
-  async function handleBioSubmit(event) {
-    event.preventDefault();
-    setBioLoading(true);
-    const formData = new FormData();
-    formData.append("bio", bio);
-    const res = await updateBio(formData);
-    if (res.success) {
-      setProfile((current) => ({ ...current, bio }));
-      toast.success(res.message);
-    } else {
-      toast.error(res.error);
-    }
-    setBioLoading(false);
-  }
+  const handleBasics = (e) => {
+    e.preventDefault();
+    const fd = new FormData();
+    fd.append("name", name);
+    fd.append("headline", headline);
+    fd.append("location", location);
+    fd.append("availability", availability);
+    save("basics", () => updateBasicInfo(fd), () =>
+      setProfile((p) => ({ ...p, name, headline, location, availability }))
+    );
+  };
 
-  async function handleSkillsSubmit(event) {
-    event.preventDefault();
-    setSkillsLoading(true);
-    const formData = new FormData();
-    formData.append("teachSkills", teachSkills.join(","));
-    formData.append("learnSkills", learnSkills.join(","));
-    const res = await updateSkills(formData);
-    if (res.success) {
-      setProfile((current) => ({ ...current, teachSkills, learnSkills }));
-      toast.success(res.message);
-    } else {
-      toast.error(res.error);
-    }
-    setSkillsLoading(false);
-  }
+  const handleBio = (e) => {
+    e.preventDefault();
+    const fd = new FormData();
+    fd.append("bio", bio);
+    save("about", () => updateBio(fd), () => setProfile((p) => ({ ...p, bio })));
+  };
 
-  async function handleAvatarSubmit(event) {
-    event.preventDefault();
-    setAvatarLoading(true);
-    const sanitizedImage = normalizeImageUrl(image);
-    const formData = new FormData();
-    formData.append("image", sanitizedImage);
-    const res = await updateAvatar(formData);
-    if (res.success) {
-      setImage(sanitizedImage);
-      setProfile((current) => ({ ...current, image: sanitizedImage || null }));
-      toast.success(res.message);
-    } else {
-      toast.error(res.error);
-    }
-    setAvatarLoading(false);
-  }
+  const handleSkills = (e) => {
+    e.preventDefault();
+    const fd = new FormData();
+    fd.append("teachSkills", teachSkills.join(","));
+    fd.append("learnSkills", learnSkills.join(","));
+    save("skills", () => updateSkills(fd), () => setProfile((p) => ({ ...p, teachSkills, learnSkills })));
+  };
 
-  async function handleCoverSubmit(event) {
-    event.preventDefault();
-    setCoverLoading(true);
-    const sanitizedImage = normalizeImageUrl(coverImage);
-    const formData = new FormData();
-    formData.append("coverImage", sanitizedImage);
-    const res = await updateCoverImage(formData);
-    if (res.success) {
-      setCoverImage(sanitizedImage);
-      setProfile((current) => ({ ...current, coverImage: sanitizedImage || null }));
-      toast.success(res.message);
-    } else {
-      toast.error(res.error);
-    }
-    setCoverLoading(false);
-  }
+  const handlePhotos = (e) => {
+    e.preventDefault();
+    const avatarChanged = safeImage !== normalizeImageUrl(profile?.image || "");
+    const coverChanged = safeCover !== normalizeImageUrl(profile?.coverImage || "");
 
-  function addSkill(type, value) {
-    const trimmed = value.trim();
-    if (!trimmed) return;
-    if (type === "teach") {
-      if (!teachSkills.includes(trimmed)) setTeachSkills((current) => [...current, trimmed]);
-      setTeachInput("");
-      return;
-    }
-    if (!learnSkills.includes(trimmed)) setLearnSkills((current) => [...current, trimmed]);
-    setLearnInput("");
-  }
+    save(
+      "photos",
+      async () => {
+        const results = [];
+        if (avatarChanged) {
+          const fd = new FormData();
+          fd.append("image", safeImage);
+          results.push(await updateAvatar(fd));
+        }
+        if (coverChanged) {
+          const fd = new FormData();
+          fd.append("coverImage", safeCover);
+          results.push(await updateCoverImage(fd));
+        }
+        const failed = results.find((r) => !r.success);
+        return failed || { success: true, message: "Photos updated" };
+      },
+      () => {
+        setImage(safeImage);
+        setCoverImage(safeCover);
+        setProfile((p) => ({ ...p, image: safeImage || null, coverImage: safeCover || null }));
+      }
+    );
+  };
 
   if (pageLoading) {
-    return <div className="min-h-[80vh] bg-transparent pt-12" />;
+    return (
+      <div className="flex min-h-[80vh] items-center justify-center bg-white pt-12" role="status" aria-label="Loading profile">
+        <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-[#e7e8e4] border-t-[#D89216]" />
+      </div>
+    );
   }
+
+  const displayName = profile?.name || "Your name";
+  const hasSkills = teachSkills.length || learnSkills.length;
 
   return (
     <>
-      <Toaster position="top-right" />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: { color: "#11201b", border: "1px solid #e7e8e4", fontFamily: "var(--font-text), sans-serif" },
+          success: { iconTheme: { primary: "#D89216", secondary: "#fff" } },
+        }}
+      />
 
-      <div className="relative min-h-[90vh] overflow-hidden bg-transparent bg-[radial-gradient(ellipse_80%_60%_at_20%_10%,rgba(26,63,166,0.13)_0%,transparent_60%),radial-gradient(ellipse_60%_50%_at_80%_90%,rgba(91,171,240,0.12)_0%,transparent_55%)] px-5 pb-5 pt-24 md:px-10 md:pb-10 md:pt-24" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-        <motion.div className="relative z-10 mx-auto max-w-[1200px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
-          <motion.section
-            className="mb-8 overflow-hidden rounded-[28px] border border-[#5BABF0]/20 bg-white shadow-[0_10px_45px_rgba(26,63,166,0.14)]"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          >
+      <div className="min-h-[90vh] bg-white px-4 pb-16 pt-24 md:px-10" style={{ fontFamily: "var(--font-text), sans-serif" }}>
+        <motion.div
+          className="mx-auto max-w-[980px]"
+          initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {/* ===== Profile card ===== */}
+          <section className="overflow-hidden rounded-[28px] border border-[#e7e8e4] bg-white shadow-[0_10px_45px_rgba(17,32,27,0.10)]">
             <div
-              className="relative h-[170px] md:h-[220px] bg-[radial-gradient(circle_at_20%_30%,rgba(91,171,240,0.95),transparent_26%),radial-gradient(circle_at_62%_0%,rgba(91,171,240,0.65),transparent_26%),radial-gradient(circle_at_74%_45%,rgba(74,144,232,0.8),transparent_24%),radial-gradient(circle_at_96%_12%,rgba(91,171,240,0.8),transparent_20%),linear-gradient(115deg,#5BABF0_0%,#5BABF0_30%,#5BABF0_48%,#5BABF0_72%,#5BABF0_100%)]"
+              className="relative h-[150px] md:h-[200px] bg-[radial-gradient(circle_at_20%_30%,rgba(216,146,22,0.3),transparent_26%),radial-gradient(circle_at_74%_45%,rgba(216,146,22,0.2),transparent_24%),linear-gradient(115deg,#11201b_0%,#1d342a_55%,#11201b_100%)]"
               style={
-                safeCoverImage
+                safeCover
                   ? {
-                      backgroundImage: `linear-gradient(rgba(26,63,166,0.12), rgba(26,63,166,0.12)), url(${safeCoverImage})`,
+                      backgroundImage: `linear-gradient(rgba(17,32,27,0.12), rgba(17,32,27,0.12)), url(${safeCover})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                     }
                   : undefined
               }
             >
-              <button type="button" onClick={() => avatarInputRef.current?.focus()} className="absolute right-4 top-4 inline-flex rounded-full border border-[#5BABF0]/70 bg-[#5BABF0]/80 px-3 py-2 text-sm font-semibold text-[#1A3FA6] shadow-[0_8px_18px_rgba(26,63,166,0.12)] transition-all duration-200 hover:scale-105">
-                Edit
+              <button
+                type="button"
+                onClick={() => openEditor("photos")}
+                className="absolute right-4 top-4 rounded-full border border-white/30 bg-[#11201b]/75 px-4 py-2 text-base font-semibold text-white backdrop-blur transition hover:bg-[#11201b] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#D89216]/50"
+              >
+                Change cover
               </button>
             </div>
 
-            <div className="px-5 pb-6 md:px-8 md:pb-8">
-              <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-                <div className="flex flex-col gap-4 md:flex-row md:items-end">
-                  <motion.div className="relative -mt-14 flex h-28 w-28 items-center justify-center overflow-hidden rounded-full border-[5px] border-white bg-[#F8F9FC] shadow-[0_10px_26px_rgba(26,63,166,0.16)] md:h-32 md:w-32" whileHover={{ scale: 1.03 }} onClick={() => avatarInputRef.current?.focus()}>
-                    {safeImage ? (
-                      <Image src={safeImage} alt="avatar" className="h-full w-full object-cover" width={128} height={128} />
+            <div className="px-5 pb-8 md:px-8">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex flex-col gap-3 sm:flex-row sm:gap-5">
+                  <button
+                    type="button"
+                    onClick={() => openEditor("photos")}
+                    aria-label="Change profile photo"
+                    className="relative z-10 -mt-12 flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-full border-[5px] border-white bg-[#e7e8e4] shadow-[0_10px_26px_rgba(17,32,27,0.16)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#D89216]/50 md:-mt-16 md:h-32 md:w-32"
+                  >
+                    {safeImage && !avatarBroken ? (
+                      <Image src={safeImage} alt={`${displayName}'s photo`} width={128} height={128} unoptimized onError={() => setAvatarBroken(true)} className="h-full w-full object-cover" />
                     ) : (
-                      <span className="text-2xl font-bold text-[#1A3FA6]" style={{ fontFamily: "'Libre Baskerville', serif" }}>{initials(profile?.name)}</span>
+                      <span className="text-3xl font-bold text-[#11201b] md:text-4xl" style={{ fontFamily: "var(--font-display), Georgia, serif" }}>
+                        {initials(profile?.name) || "?"}
+                      </span>
                     )}
-                  </motion.div>
+                  </button>
 
-                  <div>
-                    <h1 className="text-3xl font-bold tracking-[-0.02em] text-[#1A3FA6] md:text-[2.5rem]" style={{ fontFamily: "'Libre Baskerville', serif" }}>{profile?.name}</h1>
-                    <p className="mt-1 text-lg text-[#5BABF0]">{profile?.headline || "Add your professional headline"}</p>
-                    <p className="mt-1 text-base text-[#1A3FA6]">{profile?.location || "Add your location"}</p>
-                    <div className="mt-4 flex flex-wrap gap-3">
-                      <button type="button" className="rounded-full bg-[#1A3FA6] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_8px_18px_rgba(26,63,166,0.18)] transition-all duration-200 hover:-translate-y-px">Edit Profile</button>
-                      <button type="button" className="rounded-full border border-[#5BABF0]/30 bg-white px-5 py-2.5 text-sm font-semibold text-[#1A3FA6] transition-all duration-200 hover:-translate-y-px hover:bg-[#5BABF0]/10">Settings</button>
-                    </div>
+                  <div className="min-w-0 sm:pt-4">
+                    <h1 className="break-words text-4xl font-bold tracking-[-0.02em] text-[#11201b] md:text-[3.25rem] md:leading-tight" style={{ fontFamily: "var(--font-display), Georgia, serif" }}>
+                      {displayName}
+                    </h1>
+                    <p className="mt-1 text-xl text-[#8F5E00]">{profile?.headline || "Add a headline"}</p>
+                    <p className="mt-0.5 text-lg text-[#11201b]/80">{profile?.location || "Add your location"}</p>
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-4 lg:min-w-[310px] lg:max-w-[360px]">
-                  <div className="self-start rounded-full border border-[#F8F9FC] bg-[#F8F9FC] px-4 py-2 text-sm text-[#5BABF0] lg:self-end">
-                    <span className="font-semibold text-[#1A3FA6]">Current role</span>
-                    <span className="mx-2 text-[#5BABF0]">|</span>
-                    <span className="font-semibold text-[#1A3FA6]">{profile?.headline || "Software Engineer"}</span>
-                  </div>
-                  <div className="rounded-[22px] border border-[#F8F9FC] bg-[#F8F9FC] p-4">
-                    <div className="mb-3 flex items-center justify-between">
-                      <span className="text-sm font-semibold uppercase tracking-[0.05em] text-[#1A3FA6]">Skills</span>
-                      <span className="text-sm font-semibold text-[#5BABF0]">Featured</span>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {featuredSkills.length ? featuredSkills.map((skill, index) => <Chip key={skill} tone={index < 4 ? "teach" : "learn"}>{skill}</Chip>) : <span className="text-sm text-[#5BABF0]">Add your top skills here</span>}
-                    </div>
-                  </div>
+                <button
+                  type="button"
+                  onClick={() => openEditor("basics")}
+                  className="self-start rounded-full bg-[#11201b] px-6 py-3 text-base font-bold text-white shadow-[0_8px_18px_rgba(17,32,27,0.18)] transition hover:-translate-y-px focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#D89216]/40 sm:mt-4"
+                >
+                  Edit profile
+                </button>
+              </div>
+
+              {/* About + availability */}
+              <div className="mt-8 grid gap-6 border-t border-[#e7e8e4] pt-6 md:grid-cols-[1.6fr_1fr]">
+                <div>
+                  <h2 className="text-lg font-bold text-[#11201b]" style={{ fontFamily: "var(--font-display), Georgia, serif" }}>About</h2>
+                  <p className="mt-2 max-w-[68ch] whitespace-pre-line text-[17px] leading-relaxed text-[#11201b]/80">
+                    {profile?.bio || "Tell people what you build, teach and want to learn."}
+                  </p>
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-[#11201b]" style={{ fontFamily: "var(--font-display), Georgia, serif" }}>Availability</h2>
+                  <p className="mt-2 text-[17px] leading-relaxed text-[#11201b]/80">
+                    {profile?.availability || "Share when you are free so others can plan with you."}
+                  </p>
                 </div>
               </div>
 
-              <div className="mt-6 grid gap-4 md:grid-cols-3">
-                {[
-                  { title: "Ready for work", text: profile?.availability || "Share when you are available so other members can plan with you." },
-                  { title: "Share your story", text: profile?.bio || "Use your bio to tell people what you build, teach, and want to learn." },
-                  { title: "Update", text: `Teaching ${teachSkills.length} skills and learning ${learnSkills.length} right now.` },
-                ].map((item) => (
-                  <div key={item.title} className="rounded-[20px] border border-[#F8F9FC] bg-[#F8F9FC] px-4 py-4 shadow-[0_4px_16px_rgba(26,63,166,0.05)]">
-                    <h3 className="text-base font-bold text-[#1A3FA6]">{item.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-[#5BABF0]">{item.text}</p>
+              {/* Skills */}
+              <div className="mt-6 grid gap-5 border-t border-[#e7e8e4] pt-6 sm:grid-cols-2">
+                <div>
+                  <h2 className="mb-3 text-base font-semibold text-[#11201b]">Can teach</h2>
+                  <div className="flex flex-wrap gap-2">
+                    {profile?.teachSkills?.length ? (
+                      profile.teachSkills.map((s) => <Chip key={s} tone="teach">{s}</Chip>)
+                    ) : (
+                      <span className="text-base text-[#8F5E00]">No skills added yet</span>
+                    )}
                   </div>
-                ))}
+                </div>
+                <div>
+                  <h2 className="mb-3 text-base font-semibold text-[#11201b]">Wants to learn</h2>
+                  <div className="flex flex-wrap gap-2">
+                    {profile?.learnSkills?.length ? (
+                      profile.learnSkills.map((s) => <Chip key={s} tone="learn">{s}</Chip>)
+                    ) : (
+                      <span className="text-base text-[#8F5E00]">No skills added yet</span>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
-          </motion.section>
+          </section>
 
-          <div className="grid gap-6 lg:grid-cols-[1fr_1.55fr]">
-            <div className="flex flex-col gap-6">
-              <section className="rounded-xl border border-[#5BABF0] bg-white p-6 shadow-[0_4px_20px_rgba(26,63,166,0.10)]">
-                <h2 className="mb-4 border-b border-[#5BABF0] pb-3 text-base font-bold text-[#1A3FA6]" style={{ fontFamily: "'Libre Baskerville', serif" }}>Cover Photo</h2>
-                <form onSubmit={handleCoverSubmit}>
-                  <input className="w-full rounded-lg border-[1.5px] border-[#5BABF0] bg-[#F8F9FC] px-3 py-2.5 text-sm text-[#0f172a] outline-none transition-all duration-180 placeholder:text-[#5BABF0] focus:border-[#1A3FA6] focus:bg-white" type="url" placeholder="https://example.com/cover.jpg" value={coverImage} onChange={(event) => setCoverImage(event.target.value)} maxLength={2048} />
-                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-[#1A3FA6] px-3 py-2 text-sm font-bold text-white" disabled={coverLoading}>{coverLoading ? "Saving..." : "Update Cover Photo"}</motion.button>
-                </form>
-              </section>
+          {/* ===== Editor ===== */}
+          <section
+            ref={editorRef}
+            className="mt-8 scroll-mt-24 rounded-[28px] border border-[#e7e8e4] bg-white p-5 shadow-[0_4px_20px_rgba(17,32,27,0.08)] md:p-8"
+          >
+            <h2 className="text-2xl font-bold text-[#11201b]" style={{ fontFamily: "var(--font-display), Georgia, serif" }}>
+              Edit your profile
+            </h2>
 
-              <section className="rounded-xl border border-[#5BABF0] bg-white p-6 shadow-[0_4px_20px_rgba(26,63,166,0.10)]">
-                <h2 className="mb-4 border-b border-[#5BABF0] pb-3 text-base font-bold text-[#1A3FA6]" style={{ fontFamily: "'Libre Baskerville', serif" }}>Profile Photo</h2>
-                <form onSubmit={handleAvatarSubmit}>
-                  <input ref={avatarInputRef} className="w-full rounded-lg border-[1.5px] border-[#5BABF0] bg-[#F8F9FC] px-3 py-2.5 text-sm text-[#0f172a] outline-none transition-all duration-180 placeholder:text-[#5BABF0] focus:border-[#1A3FA6] focus:bg-white" type="url" placeholder="https://example.com/photo.jpg" value={image} onChange={(event) => setImage(event.target.value)} maxLength={2048} />
-                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-[#1A3FA6] px-3 py-2 text-sm font-bold text-white" disabled={avatarLoading}>{avatarLoading ? "Saving..." : "Update Photo"}</motion.button>
-                </form>
-              </section>
-
-              <section className="rounded-xl border border-[#5BABF0] bg-white p-6 shadow-[0_4px_20px_rgba(26,63,166,0.10)]">
-                <h2 className="mb-4 border-b border-[#5BABF0] pb-3 text-base font-bold text-[#1A3FA6]" style={{ fontFamily: "'Libre Baskerville', serif" }}>About Me</h2>
-                <form onSubmit={handleBioSubmit}>
-                  <textarea className="min-h-[120px] w-full resize-y rounded-lg border-[1.5px] border-[#5BABF0] bg-[#F8F9FC] px-3 py-3 text-sm text-[#0f172a] outline-none transition-all duration-180 placeholder:text-[#5BABF0] focus:border-[#1A3FA6] focus:bg-white" placeholder="Tell the community about yourself..." value={bio} onChange={(event) => setBio(event.target.value)} maxLength={600} rows={6} />
-                  <div className="mt-1 text-right text-xs text-[#5BABF0]">{bio.length}/600</div>
-                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-[#1A3FA6] px-3 py-2 text-sm font-bold text-white" disabled={bioLoading}>{bioLoading ? "Saving..." : "Save Bio"}</motion.button>
-                </form>
-              </section>
+            <div role="tablist" aria-label="Profile sections" className="mt-5 flex gap-1 overflow-x-auto rounded-full bg-[#e7e8e4]/50 p-1">
+              {TABS.map((t) => (
+                <button
+                  key={t.id}
+                  role="tab"
+                  type="button"
+                  id={`tab-${t.id}`}
+                  aria-selected={tab === t.id}
+                  aria-controls={`panel-${t.id}`}
+                  onClick={() => setTab(t.id)}
+                  className={`relative flex-1 whitespace-nowrap rounded-full px-4 py-2 text-base font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D89216] ${
+                    tab === t.id ? "bg-[#11201b] text-white shadow-sm" : "text-[#11201b] hover:bg-white"
+                  }`}
+                >
+                  {t.label}
+                  {dirty[t.id] && (
+                    <span className="absolute right-2 top-1.5 h-2 w-2 rounded-full bg-[#D89216]" aria-label="Unsaved changes" />
+                  )}
+                </button>
+              ))}
             </div>
 
-            <div className="flex flex-col gap-6">
-              <section className="rounded-xl border border-[#5BABF0] bg-white p-6 shadow-[0_4px_20px_rgba(26,63,166,0.10)]">
-                <h2 className="mb-4 border-b border-[#5BABF0] pb-3 text-base font-bold text-[#1A3FA6]" style={{ fontFamily: "'Libre Baskerville', serif" }}>Basic Information</h2>
-                <form onSubmit={handleBasicSubmit}>
+            <div className="mt-6" role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`}>
+              {tab === "basics" && (
+                <form onSubmit={handleBasics} className="space-y-4">
                   <div className="grid gap-4 md:grid-cols-2">
-                    <input className="w-full rounded-lg border-[1.5px] border-[#5BABF0] bg-[#F8F9FC] px-3 py-2.5 text-sm text-[#0f172a] outline-none transition-all duration-180 placeholder:text-[#5BABF0] focus:border-[#1A3FA6] focus:bg-white" value={name} onChange={(event) => setName(event.target.value)} placeholder="Your full name" />
-                    <input className="w-full rounded-lg border-[1.5px] border-[#5BABF0] bg-[#F8F9FC] px-3 py-2.5 text-sm text-[#0f172a] outline-none transition-all duration-180 placeholder:text-[#5BABF0] focus:border-[#1A3FA6] focus:bg-white" value={location} onChange={(event) => setLocation(event.target.value)} placeholder="City, Country" />
+                    <Field label="Full name">
+                      <input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} placeholder="Your full name" autoComplete="name" />
+                    </Field>
+                    <Field label="Location">
+                      <input className={inputClass} value={location} onChange={(e) => setLocation(e.target.value)} placeholder="City, Country" autoComplete="address-level2" />
+                    </Field>
                   </div>
-                  <input className="mt-4 w-full rounded-lg border-[1.5px] border-[#5BABF0] bg-[#F8F9FC] px-3 py-2.5 text-sm text-[#0f172a] outline-none transition-all duration-180 placeholder:text-[#5BABF0] focus:border-[#1A3FA6] focus:bg-white" value={headline} onChange={(event) => setHeadline(event.target.value)} placeholder="Professional headline" />
-                  <input className="mt-4 w-full rounded-lg border-[1.5px] border-[#5BABF0] bg-[#F8F9FC] px-3 py-2.5 text-sm text-[#0f172a] outline-none transition-all duration-180 placeholder:text-[#5BABF0] focus:border-[#1A3FA6] focus:bg-white" value={availability} onChange={(event) => setAvailability(event.target.value)} placeholder="Availability" />
-                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-[#1A3FA6] px-3 py-2 text-sm font-bold text-white" disabled={basicLoading}>{basicLoading ? "Saving..." : "Save Changes"}</motion.button>
+                  <Field label="Headline" hint="A short line about what you do, like “Frontend developer”.">
+                    <input className={inputClass} value={headline} onChange={(e) => setHeadline(e.target.value)} placeholder="Frontend developer" />
+                  </Field>
+                  <Field label="Availability" hint="For example, “Weekday evenings” or “Weekends”.">
+                    <input className={inputClass} value={availability} onChange={(e) => setAvailability(e.target.value)} placeholder="Weekday evenings" />
+                  </Field>
+                  <SaveButton loading={saving === "basics"} disabled={!dirty.basics}>Save changes</SaveButton>
                 </form>
-              </section>
+              )}
 
-              <section className="rounded-xl border border-[#5BABF0] bg-white p-6 shadow-[0_4px_20px_rgba(26,63,166,0.10)]">
-                <h2 className="mb-4 border-b border-[#5BABF0] pb-3 text-base font-bold text-[#1A3FA6]" style={{ fontFamily: "'Libre Baskerville', serif" }}>Skills Exchange</h2>
-                <form onSubmit={handleSkillsSubmit}>
-                  <div>
-                    <div className="flex gap-2">
-                      <input className="flex-1 rounded-lg border-[1.5px] border-[#5BABF0] bg-[#F8F9FC] px-3 py-2.5 text-sm text-[#0f172a] outline-none transition-all duration-180 placeholder:text-[#5BABF0] focus:border-[#1A3FA6] focus:bg-white" value={teachInput} onChange={(event) => setTeachInput(event.target.value)} placeholder="Add a skill you can teach" />
-                      <button type="button" className="rounded-lg border-[1.5px] border-[#1A3FA6] px-3 text-sm font-semibold text-[#1A3FA6]" onClick={() => addSkill("teach", teachInput)}>+ Add</button>
-                    </div>
-                    <div className="mt-3 flex flex-wrap gap-2">{teachSkills.map((skill) => <Chip key={skill} tone="teach">{skill}</Chip>)}</div>
-                  </div>
-                  <div className="my-5 h-px bg-[#5BABF0]" />
-                  <div>
-                    <div className="flex gap-2">
-                      <input className="flex-1 rounded-lg border-[1.5px] border-[#5BABF0] bg-[#F8F9FC] px-3 py-2.5 text-sm text-[#0f172a] outline-none transition-all duration-180 placeholder:text-[#5BABF0] focus:border-[#1A3FA6] focus:bg-white" value={learnInput} onChange={(event) => setLearnInput(event.target.value)} placeholder="Add a skill you want to learn" />
-                      <button type="button" className="rounded-lg border-[1.5px] border-[#5BABF0] px-3 text-sm font-semibold text-[#5BABF0]" onClick={() => addSkill("learn", learnInput)}>+ Add</button>
-                    </div>
-                    <div className="mt-3 flex flex-wrap gap-2">{learnSkills.map((skill) => <Chip key={skill} tone="learn">{skill}</Chip>)}</div>
-                  </div>
-                  <motion.button type="submit" className="mt-5 w-full rounded-xl bg-[#1A3FA6] px-3 py-2 text-sm font-bold text-white" disabled={skillsLoading}>{skillsLoading ? "Saving..." : "Save Skills"}</motion.button>
+              {tab === "about" && (
+                <form onSubmit={handleBio}>
+                  <Field label="About you">
+                    <textarea
+                      className={`${inputClass} min-h-[160px] resize-y leading-relaxed`}
+                      placeholder="Tell the community about yourself…"
+                      value={bio}
+                      onChange={(e) => setBio(e.target.value)}
+                      maxLength={600}
+                    />
+                  </Field>
+                  <div className="mt-1 text-right text-sm text-[#8F5E00]">{bio.length}/600</div>
+                  <SaveButton loading={saving === "about"} disabled={!dirty.about}>Save bio</SaveButton>
                 </form>
-              </section>
+              )}
+
+              {tab === "skills" && (
+                <form onSubmit={handleSkills} className="space-y-8">
+                  <SkillEditor title="Skills you can teach" placeholder="e.g. React, Guitar, Excel" tone="teach" skills={teachSkills} setSkills={setTeachSkills} />
+                  <SkillEditor title="Skills you want to learn" placeholder="e.g. Spanish, Photography" tone="learn" skills={learnSkills} setSkills={setLearnSkills} />
+                  <SaveButton loading={saving === "skills"} disabled={!dirty.skills}>Save skills</SaveButton>
+                </form>
+              )}
+
+              {tab === "photos" && (
+                <form onSubmit={handlePhotos} className="space-y-6">
+                  <div className="flex items-start gap-4">
+                    <ImagePreview src={safeImage} round label="Profile photo preview" />
+                    <div className="flex-1">
+                      <Field label="Profile photo" hint="Paste a link to an image (https://…).">
+                        <input className={inputClass} type="url" value={image} onChange={(e) => setImage(e.target.value)} placeholder="https://example.com/photo.jpg" maxLength={2048} />
+                      </Field>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <ImagePreview src={safeCover} label="Cover photo preview" />
+                    <div className="flex-1">
+                      <Field label="Cover photo" hint="A wide image works best.">
+                        <input className={inputClass} type="url" value={coverImage} onChange={(e) => setCoverImage(e.target.value)} placeholder="https://example.com/cover.jpg" maxLength={2048} />
+                      </Field>
+                    </div>
+                  </div>
+                  <SaveButton loading={saving === "photos"} disabled={!dirty.photos}>Save photos</SaveButton>
+                </form>
+              )}
             </div>
-          </div>
+          </section>
         </motion.div>
       </div>
     </>

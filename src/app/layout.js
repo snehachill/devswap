@@ -1,17 +1,33 @@
 import "./globals.css";
 import { auth } from "@/auth";
-import { DM_Sans, DM_Serif_Display } from "next/font/google";
+import { Cormorant_Garamond, DM_Sans, JetBrains_Mono } from "next/font/google";
 import Navbar from "@/src/components/navbar";
 
-const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans" });
-const dmSerif = DM_Serif_Display({ weight: "400", subsets: ["latin"], variable: "--font-dm-serif" });
+const spaceGrotesk = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-display",
+  display: "swap",
+});
+const inter = DM_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-text",
+  display: "swap",
+});
+const jetMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 export default async function RootLayout({ children }) {
   const session = await auth();
 
   return (
-    <html lang="en" className={`${dmSans.variable} ${dmSerif.variable}`}>
-      <body className="antialiased font-sans">
+    <html lang="en" data-scroll-behavior="smooth" className={`${spaceGrotesk.variable} ${inter.variable} ${jetMono.variable}`}>
+      <body className="antialiased">
         <Navbar session={session} />
         <main>{children}</main>
       </body>

@@ -4,264 +4,308 @@ import { useMemo, useState, useTransition } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Search, MapPin, Sparkles, ArrowRightLeft, Clock3 } from "lucide-react";
+import {
+  ArrowRightLeft,
+  BookOpen,
+  CheckCircle2,
+  Clock3,
+  MapPin,
+  Plus,
+  Search,
+  Send,
+} from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 
-import { createSwapRequest } from "@/src/actions/user/discoveractions";
+import {
+  createSwapRequest,
+  updateDiscoverSkills,
+} from "@/src/actions/user/discoveractions";
 
 const ease = [0.22, 1, 0.36, 1];
 
-function FilterChip({ active, children, onClick }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`rounded-full border px-4 py-2 text-sm font-medium transition-all duration-200 ${
-        active
-          ? "border-[#1A3FA6] bg-[#1A3FA6] text-white"
-          : "border-[#5BABF0]/20 bg-white text-[#1A3FA6] hover:border-[#5BABF0]/30 hover:text-[#5BABF0]"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
+const SKILL_OPTIONS = [
+  "React",
+  "React.js",
+  "Next.js",
+  "JavaScript",
+  "TypeScript",
+  "Node.js",
+  "Express",
+  "MongoDB",
+  "PostgreSQL",
+  "Python",
+  "Django",
+  "Java",
+  "DSA",
+  "Git",
+  "UI/UX",
+  "Tailwind CSS",
+  "Machine Learning",
+  "REST APIs",
+  "GraphQL",
+];
 
-function SkillBadge({ children, tone = "neutral" }) {
-  const tones = {
-    neutral: "border-[#5BABF0]/20 bg-[#F8F9FC] text-[#1A3FA6]",
-    teach: "border-[#5BABF0]/35 bg-[#5BABF0]/10 text-[#1A3FA6]",
-    learn: "border-violet-200 bg-violet-50 text-violet-800",
-    match: "border-[#5BABF0]/35 bg-[#5BABF0]/10 text-[#1A3FA6]",
-  };
-
-  return (
-    <span className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${tones[tone]}`}>
-      {children}
-    </span>
+function uniqueSkills(skills) {
+  return Array.from(
+    new Set(
+      skills
+        .map((skill) => String(skill ?? "").trim())
+        .filter(Boolean),
+    ),
   );
 }
 
 function Avatar({ profile }) {
   return (
-    <div className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl bg-[#1A3FA6] text-base font-bold text-white shadow-sm">
+    <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[#11201b] text-sm font-bold text-white">
       {profile.image ? (
         <Image
           src={profile.image}
           alt={profile.name}
           fill
+          sizes="48px"
           className="object-cover"
-          sizes="64px"
         />
       ) : (
-        <span>{profile.initials}</span>
+        profile.initials
       )}
     </div>
   );
 }
 
-function MatchCard({ profile, onRequest, isSubmitting }) {
-  const [selectedTeachSkill, setSelectedTeachSkill] = useState(
-    profile.wantsToLearnFromYou[0] ?? "",
+function SkillPill({ children, tone = "blue" }) {
+  const tones = {
+    blue: "border-[#D89216]/25 bg-[#D89216]/10 text-[#11201b]",
+    green: "border-emerald-200 bg-emerald-50 text-emerald-700",
+    slate: "border-slate-200 bg-slate-50 text-slate-600",
+  };
+
+  return (
+    <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${tones[tone]}`}>
+      {children}
+    </span>
   );
-  const [selectedLearnSkill, setSelectedLearnSkill] = useState(
-    profile.canTeachYou[0] ?? "",
+}
+
+function SkillPicker({ title, value, onChange, onAdd, skills, tone }) {
+  return (
+    <div className="rounded-2xl border border-[#D89216]/20 bg-white p-4">
+      <p className="text-sm font-semibold text-[#11201b]">{title}</p>
+      <div className="mt-3 flex gap-2">
+        <select
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          className="min-h-11 flex-1 rounded-xl border border-[#D89216]/20 bg-[#ffffff] px-3 text-sm text-[#11201b] outline-none transition focus:border-[#11201b]"
+        >
+          <option value="">Select a skill</option>
+          {SKILL_OPTIONS.map((skill) => (
+            <option key={`${title}-${skill}`} value={skill}>
+              {skill}
+            </option>
+          ))}
+        </select>
+        <button
+          type="button"
+          onClick={onAdd}
+          aria-label={`Add ${title.toLowerCase()} skill`}
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#11201b] text-white transition hover:bg-[#11201b]"
+        >
+          <Plus size={18} />
+        </button>
+      </div>
+      <div className="mt-3 flex min-h-8 flex-wrap gap-2">
+        {skills.length ? (
+          skills.map((skill) => (
+            <SkillPill key={`${title}-${skill}`} tone={tone}>
+              {skill}
+            </SkillPill>
+          ))
+        ) : (
+          <span className="text-xs text-slate-400">Add at least one skill.</span>
+        )}
+      </div>
+    </div>
   );
+}
+
+function SwapBox({ profile, onRequest, isSubmitting }) {
+  const [teachSkill, setTeachSkill] = useState(profile.wantsToLearnFromYou[0] ?? "");
+  const [learnSkill, setLearnSkill] = useState(profile.canTeachYou[0] ?? "");
   const [message, setMessage] = useState("");
 
+  const hasReciprocalMatch = profile.wantsToLearnFromYou.length > 0 && profile.canTeachYou.length > 0;
   const canSend =
-    Boolean(selectedTeachSkill) &&
-    Boolean(selectedLearnSkill) &&
+    hasReciprocalMatch &&
+    teachSkill &&
+    learnSkill &&
     !profile.requestStatus &&
     !isSubmitting;
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.55, ease }}
-      className="rounded-[28px] border border-[#5BABF0]/20 bg-white p-6 shadow-sm"
-    >
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-        <div className="flex gap-4">
-          <Avatar profile={profile} />
-          <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-3">
-              <h2 className="text-2xl font-semibold tracking-tight text-[#1A3FA6]">
-                {profile.name}
-              </h2>
-              {profile.requestStatus ? (
-                <span className="rounded-full border border-[#5BABF0]/35 bg-[#5BABF0]/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#1A3FA6]">
-                  {profile.requestStatus}
-                </span>
-              ) : null}
-            </div>
-            {profile.headline ? (
-              <p className="mt-1 text-sm text-[#5BABF0]">{profile.headline}</p>
-            ) : null}
-            <div className="mt-3 flex flex-wrap gap-2 text-sm text-[#5BABF0]">
-              {profile.location ? (
-                <span className="inline-flex items-center gap-1.5">
-                  <MapPin size={14} />
-                  {profile.location}
-                </span>
-              ) : null}
-              {profile.availability ? (
-                <span className="inline-flex items-center gap-1.5">
-                  <Clock3 size={14} />
-                  {profile.availability}
-                </span>
-              ) : null}
-            </div>
-          </div>
-        </div>
+    <div className="mt-5 rounded-2xl border border-[#D89216]/20 bg-[#ffffff] p-4">
+      <div className="flex items-center gap-2 text-sm font-semibold text-[#11201b]">
+        <ArrowRightLeft size={16} />
+        Start a swap
+      </div>
 
-        <div className="rounded-2xl border border-[#5BABF0]/20 bg-[#5BABF0]/10 px-4 py-3 lg:min-w-[180px]">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#1A3FA6]">
-            Compatibility
-          </p>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-[#1A3FA6]">
-            {profile.compatibilityScore}
-          </p>
-          <p className="mt-1 text-xs text-[#5BABF0]">
-            {profile.complementarySkills.length} shared swap opportunities
-          </p>
+      <div className="mt-4 grid gap-3">
+        <label className="text-xs font-semibold text-[#11201b]">
+          You will teach
+          <select
+            value={teachSkill}
+            onChange={(event) => setTeachSkill(event.target.value)}
+            disabled={!hasReciprocalMatch || Boolean(profile.requestStatus)}
+            className="mt-2 min-h-11 w-full rounded-xl border border-[#D89216]/20 bg-white px-3 text-sm font-medium text-[#11201b] outline-none transition focus:border-[#11201b]"
+          >
+            <option value="">Select a skill</option>
+            {profile.wantsToLearnFromYou.map((skill) => (
+              <option key={`${profile.id}-teach-${skill}`} value={skill}>
+                {skill}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="text-xs font-semibold text-[#11201b]">
+          You want to learn
+          <select
+            value={learnSkill}
+            onChange={(event) => setLearnSkill(event.target.value)}
+            disabled={!hasReciprocalMatch || Boolean(profile.requestStatus)}
+            className="mt-2 min-h-11 w-full rounded-xl border border-[#D89216]/20 bg-white px-3 text-sm font-medium text-[#11201b] outline-none transition focus:border-[#11201b]"
+          >
+            <option value="">Select a skill</option>
+            {profile.canTeachYou.map((skill) => (
+              <option key={`${profile.id}-learn-${skill}`} value={skill}>
+                {skill}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <textarea
+          value={message}
+          onChange={(event) => setMessage(event.target.value.slice(0, 220))}
+          disabled={!hasReciprocalMatch || Boolean(profile.requestStatus)}
+          rows={3}
+          placeholder="Short message"
+          className="resize-none rounded-xl border border-[#D89216]/20 bg-white px-3 py-3 text-sm text-[#11201b] outline-none transition placeholder:text-slate-400 focus:border-[#11201b]"
+        />
+      </div>
+
+      <button
+        type="button"
+        disabled={!canSend}
+        onClick={() =>
+          onRequest({
+            receiverId: profile.id,
+            teachSkillOffered: teachSkill,
+            learnSkillRequested: learnSkill,
+            message,
+          })
+        }
+        className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#11201b] px-4 text-sm font-semibold text-white transition hover:bg-[#11201b] disabled:cursor-not-allowed disabled:bg-slate-300"
+      >
+        <Send size={15} />
+        {profile.requestStatus
+          ? `Request ${profile.requestStatus}`
+          : isSubmitting
+            ? "Sending..."
+            : "Send swap request"}
+      </button>
+
+      {!hasReciprocalMatch ? (
+        <p className="mt-3 text-xs leading-5 text-slate-500">
+          Swap unlocks only when your teach skill matches what they want, and
+          their teach skill matches what you want.
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+function MatchCard({ profile, onRequest, isSubmitting }) {
+  const hasReciprocalMatch = profile.wantsToLearnFromYou.length > 0 && profile.canTeachYou.length > 0;
+
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 18 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45, ease }}
+      className="flex h-full flex-col rounded-3xl border border-[#D89216]/20 bg-white p-5 shadow-[0_10px_30px_rgba(17,32,27,0.06)]"
+    >
+      <div className="flex items-start gap-3">
+        <Avatar profile={profile} />
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <h2 className="truncate text-lg font-bold text-[#11201b]">{profile.name}</h2>
+              <p className="mt-1 line-clamp-2 text-sm leading-5 text-slate-500">
+                {profile.headline || "Developer"}
+              </p>
+            </div>
+            {hasReciprocalMatch ? (
+              <CheckCircle2 className="shrink-0 text-emerald-500" size={19} />
+            ) : null}
+          </div>
+
+          <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-500">
+            {profile.location ? (
+              <span className="inline-flex items-center gap-1">
+                <MapPin size={13} />
+                {profile.location}
+              </span>
+            ) : null}
+            {profile.availability ? (
+              <span className="inline-flex items-center gap-1">
+                <Clock3 size={13} />
+                {profile.availability}
+              </span>
+            ) : null}
+          </div>
         </div>
       </div>
 
-      {profile.bio ? (
-        <p className="mt-5 text-sm leading-relaxed text-[#1A3FA6]">{profile.bio}</p>
-      ) : null}
-
-      <div className="mt-6 grid gap-4 xl:grid-cols-3">
-        <div className="rounded-2xl bg-[#F8F9FC] p-4">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#5BABF0]">
-            Can teach you
+      <div className="mt-5 grid gap-3">
+        <div>
+          <p className="mb-2 text-xs font-bold uppercase tracking-[0.12em] text-slate-400">
+            They can teach you
           </p>
           <div className="flex flex-wrap gap-2">
             {profile.canTeachYou.length ? (
               profile.canTeachYou.map((skill) => (
-                <SkillBadge key={`${profile.id}-teach-you-${skill}`} tone="teach">
+                <SkillPill key={`${profile.id}-can-${skill}`} tone="green">
                   {skill}
-                </SkillBadge>
+                </SkillPill>
               ))
             ) : (
-              <p className="text-sm text-[#5BABF0]">No direct teaching overlap yet.</p>
+              <SkillPill tone="slate">No match yet</SkillPill>
             )}
           </div>
         </div>
 
-        <div className="rounded-2xl bg-[#F8F9FC] p-4">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#5BABF0]">
-            Wants from you
+        <div>
+          <p className="mb-2 text-xs font-bold uppercase tracking-[0.12em] text-slate-400">
+            They want from you
           </p>
           <div className="flex flex-wrap gap-2">
             {profile.wantsToLearnFromYou.length ? (
               profile.wantsToLearnFromYou.map((skill) => (
-                <SkillBadge key={`${profile.id}-learn-from-you-${skill}`} tone="learn">
-                  {skill}
-                </SkillBadge>
+                <SkillPill key={`${profile.id}-wants-${skill}`}>{skill}</SkillPill>
               ))
             ) : (
-              <p className="text-sm text-[#5BABF0]">They are not seeking your listed skills yet.</p>
+              <SkillPill tone="slate">No match yet</SkillPill>
             )}
-          </div>
-        </div>
-
-        <div className="rounded-2xl bg-[#F8F9FC] p-4">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#5BABF0]">
-            Full profile skills
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {profile.teachSkills.map((skill) => (
-              <SkillBadge key={`${profile.id}-teach-${skill}`}>{skill}</SkillBadge>
-            ))}
-            {profile.learnSkills.map((skill) => (
-              <SkillBadge key={`${profile.id}-learn-${skill}`} tone="learn">
-                Wants {skill}
-              </SkillBadge>
-            ))}
           </div>
         </div>
       </div>
 
-      <div className="mt-6 rounded-[24px] border border-[#5BABF0]/20 bg-[#5BABF0]/6 p-5">
-        <div className="flex items-center gap-2 text-sm font-semibold text-[#1A3FA6]">
-          <ArrowRightLeft size={16} />
-          Start a swap
-        </div>
-        <div className="mt-4 grid gap-4 lg:grid-cols-2">
-          <label className="text-sm text-[#1A3FA6]">
-            <span className="mb-2 block font-medium">You will teach</span>
-            <select
-              value={selectedTeachSkill}
-              onChange={(event) => setSelectedTeachSkill(event.target.value)}
-              disabled={Boolean(profile.requestStatus) || isSubmitting}
-              className="w-full rounded-2xl border border-[#5BABF0]/20 bg-white px-4 py-3 text-sm outline-none transition focus:border-[#1A3FA6]"
-            >
-              <option value="">Select a skill</option>
-              {profile.wantsToLearnFromYou.map((skill) => (
-                <option key={`${profile.id}-offer-${skill}`} value={skill}>
-                  {skill}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="text-sm text-[#1A3FA6]">
-            <span className="mb-2 block font-medium">You want to learn</span>
-            <select
-              value={selectedLearnSkill}
-              onChange={(event) => setSelectedLearnSkill(event.target.value)}
-              disabled={Boolean(profile.requestStatus) || isSubmitting}
-              className="w-full rounded-2xl border border-[#5BABF0]/20 bg-white px-4 py-3 text-sm outline-none transition focus:border-[#1A3FA6]"
-            >
-              <option value="">Select a skill</option>
-              {profile.canTeachYou.map((skill) => (
-                <option key={`${profile.id}-request-${skill}`} value={skill}>
-                  {skill}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-
-        <label className="mt-4 block text-sm text-[#1A3FA6]">
-          <span className="mb-2 block font-medium">Message</span>
-          <textarea
-            value={message}
-            onChange={(event) => setMessage(event.target.value.slice(0, 300))}
-            disabled={Boolean(profile.requestStatus) || isSubmitting}
-            rows={3}
-            placeholder="Hi! I'd love to trade skills and work around both our schedules."
-            className="w-full rounded-2xl border border-[#5BABF0]/20 bg-white px-4 py-3 text-sm outline-none transition focus:border-[#1A3FA6]"
-          />
-        </label>
-
-        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs text-[#5BABF0]">
-            Requests are only enabled when both sides have matching teach/learn skills.
-          </p>
-          <button
-            type="button"
-            onClick={() =>
-              onRequest({
-                receiverId: profile.id,
-                teachSkillOffered: selectedTeachSkill,
-                learnSkillRequested: selectedLearnSkill,
-                message,
-              })
-            }
-            disabled={!canSend}
-            className="inline-flex items-center justify-center rounded-full bg-[#1A3FA6] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#5BABF0] disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {profile.requestStatus
-              ? `Request ${profile.requestStatus}`
-              : isSubmitting
-                ? "Sending..."
-                : "Send swap request"}
-          </button>
-        </div>
+      <div className="mt-auto">
+        <SwapBox
+          profile={profile}
+          onRequest={onRequest}
+          isSubmitting={isSubmitting}
+        />
       </div>
     </motion.article>
   );
@@ -269,42 +313,67 @@ function MatchCard({ profile, onRequest, isSubmitting }) {
 
 export default function DiscoverClient({ discover }) {
   const router = useRouter();
+  const [teachSkills, setTeachSkills] = useState(discover.currentUser.teachSkills);
+  const [learnSkills, setLearnSkills] = useState(discover.currentUser.learnSkills);
+  const [teachSelect, setTeachSelect] = useState("");
+  const [learnSelect, setLearnSelect] = useState("");
   const [query, setQuery] = useState("");
-  const [activeSkill, setActiveSkill] = useState("All");
-  const [onlyStrongMatches, setOnlyStrongMatches] = useState(false);
   const [submittingFor, setSubmittingFor] = useState(null);
+  const [savingSkills, setSavingSkills] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const filteredProfiles = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
 
     return discover.profiles.filter((profile) => {
-      const matchesSkill =
-        activeSkill === "All" ||
-        profile.canTeachYou.includes(activeSkill) ||
-        profile.wantsToLearnFromYou.includes(activeSkill) ||
-        profile.teachSkills.includes(activeSkill) ||
-        profile.learnSkills.includes(activeSkill);
-
-      const matchesStrength = !onlyStrongMatches || profile.compatibilityScore >= 4;
-
+      const hasReciprocalMatch =
+        profile.wantsToLearnFromYou.length > 0 && profile.canTeachYou.length > 0;
       const haystack = [
         profile.name,
         profile.headline,
         profile.location,
-        profile.bio,
         ...profile.teachSkills,
         ...profile.learnSkills,
       ]
         .join(" ")
         .toLowerCase();
 
-      const matchesQuery =
-        !normalizedQuery || haystack.includes(normalizedQuery);
-
-      return matchesSkill && matchesStrength && matchesQuery;
+      return hasReciprocalMatch && (!normalizedQuery || haystack.includes(normalizedQuery));
     });
-  }, [activeSkill, discover.profiles, onlyStrongMatches, query]);
+  }, [discover.profiles, query]);
+
+  const allSkills = uniqueSkills([...teachSkills, ...learnSkills]);
+
+  function addSkill(type) {
+    const value = type === "teach" ? teachSelect : learnSelect;
+    if (!value) return;
+
+    if (type === "teach") {
+      setTeachSkills((current) => uniqueSkills([...current, value]));
+      setTeachSelect("");
+      return;
+    }
+
+    setLearnSkills((current) => uniqueSkills([...current, value]));
+    setLearnSelect("");
+  }
+
+  function saveSkills() {
+    setSavingSkills(true);
+
+    startTransition(async () => {
+      const result = await updateDiscoverSkills({ teachSkills, learnSkills });
+
+      if (result.success) {
+        toast.success(result.message);
+        router.refresh();
+      } else {
+        toast.error(result.error || "Unable to save skills.");
+      }
+
+      setSavingSkills(false);
+    });
+  }
 
   function handleRequest(payload) {
     setSubmittingFor(payload.receiverId);
@@ -323,123 +392,82 @@ export default function DiscoverClient({ discover }) {
     });
   }
 
-  const emptyQueryState = query || activeSkill !== "All" || onlyStrongMatches;
-
   return (
     <>
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          style: {
-            border: "1px solid #5BABF0",
-            background: "#F8F9FC",
-            color: "#1A3FA6",
-          },
-        }}
-      />
+      <Toaster position="top-right" />
 
-      <main className="min-h-screen bg-transparent px-5 pb-20 pt-28 sm:px-6 lg:px-8">
+      <main className="min-h-screen bg-transparent px-4 pb-16 pt-28 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <motion.section
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease }}
-            className="overflow-hidden rounded-[36px] border border-[#5BABF0]/20 bg-white"
-          >
-            <div className="grid gap-6 px-6 py-8 lg:grid-cols-[1.4fr_0.9fr] lg:px-8 lg:py-10">
+          <section className="rounded-3xl border border-[#D89216]/20 bg-white p-5 shadow-[0_14px_40px_rgba(17,32,27,0.07)] sm:p-6">
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-[#5BABF0]/20 bg-[#5BABF0]/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#1A3FA6]">
-                  <Sparkles size={13} />
-                  Discover partners
+                <div className="inline-flex items-center gap-2 rounded-full bg-[#D89216]/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[#11201b]">
+                  <BookOpen size={14} />
+                  Discover
                 </div>
-                <h1 className="mt-5 text-4xl font-bold tracking-tight text-[#1A3FA6] sm:text-5xl">
-                  Find the right people to swap skills with.
+                <h1 className="mt-4 text-3xl font-bold tracking-tight text-[#11201b] sm:text-4xl">
+                  Find clean skill swaps.
                 </h1>
-                <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#5BABF0]">
-                  Explore developers whose teaching skills match what you want to learn,
-                  and who want what you already know.
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+                  A request is enabled only when both sides match: you teach
+                  something they want, and they teach something you want.
                 </p>
-
-                <div className="mt-6 flex flex-wrap gap-3">
-                  {discover.currentUser.teachSkills.map((skill) => (
-                    <SkillBadge key={`mine-teach-${skill}`} tone="teach">
-                      You teach {skill}
-                    </SkillBadge>
-                  ))}
-                  {discover.currentUser.learnSkills.map((skill) => (
-                    <SkillBadge key={`mine-learn-${skill}`} tone="learn">
-                      You learn {skill}
-                    </SkillBadge>
-                  ))}
-                </div>
               </div>
 
-              <div className="grid gap-4 rounded-[28px] bg-gradient-to-br from-[#1A3FA6] to-[#5BABF0] p-5 text-white">
-                <div>
-                  <p className="text-sm text-white/70">Profiles available</p>
-                  <p className="mt-1 text-4xl font-bold">{discover.stats.totalProfiles}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-white/70">Strong matches</p>
-                  <p className="mt-1 text-4xl font-bold">{discover.stats.strongMatches}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-white/70">Pending requests</p>
-                  <p className="mt-1 text-4xl font-bold">{discover.stats.pendingRequests}</p>
-                </div>
-              </div>
-            </div>
-          </motion.section>
-
-          <section className="mt-8 rounded-[32px] border border-[#5BABF0]/20 bg-white p-5 shadow-sm sm:p-6">
-            <div className="grid gap-4 lg:grid-cols-[1.4fr_auto_auto]">
-              <label className="relative block">
+              <label className="relative w-full lg:max-w-sm">
                 <Search
-                  size={18}
-                  className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#5BABF0]"
+                  size={17}
+                  className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#8F5E00]"
                 />
                 <input
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Search by name, skill, location, or headline"
-                  className="w-full rounded-full border border-[#5BABF0]/20 bg-[#F8F9FC] py-3 pl-11 pr-4 text-sm outline-none transition focus:border-[#1A3FA6]"
+                  placeholder="Search people or skills"
+                  className="min-h-12 w-full rounded-full border border-[#D89216]/20 bg-[#ffffff] pl-11 pr-4 text-sm text-[#11201b] outline-none transition focus:border-[#11201b]"
                 />
               </label>
-
-              <button
-                type="button"
-                onClick={() => setOnlyStrongMatches((current) => !current)}
-                className={`rounded-full px-5 py-3 text-sm font-semibold transition ${
-                  onlyStrongMatches
-                    ? "bg-[#1A3FA6] text-white"
-                    : "border border-[#5BABF0]/20 bg-white text-[#1A3FA6]"
-                }`}
-              >
-                Strong matches only
-              </button>
-
-              <div className="rounded-full bg-[#F8F9FC] px-5 py-3 text-sm font-medium text-[#1A3FA6]">
-                {filteredProfiles.length} results
-              </div>
-            </div>
-
-            <div className="mt-5 flex flex-wrap gap-2">
-              <FilterChip active={activeSkill === "All"} onClick={() => setActiveSkill("All")}>
-                All skills
-              </FilterChip>
-              {discover.topSkills.map((skill) => (
-                <FilterChip
-                  key={skill}
-                  active={activeSkill === skill}
-                  onClick={() => setActiveSkill(skill)}
-                >
-                  {skill}
-                </FilterChip>
-              ))}
             </div>
           </section>
 
-          <section className="mt-8 space-y-5">
+          <section className="mt-6 rounded-3xl border border-[#D89216]/20 bg-[#ffffff] p-4 sm:p-5">
+            <div className="grid gap-4 lg:grid-cols-[1fr_1fr_auto]">
+              <SkillPicker
+                title="Skills you can teach"
+                value={teachSelect}
+                onChange={setTeachSelect}
+                onAdd={() => addSkill("teach")}
+                skills={teachSkills}
+                tone="blue"
+              />
+              <SkillPicker
+                title="Skills you want to learn"
+                value={learnSelect}
+                onChange={setLearnSelect}
+                onAdd={() => addSkill("learn")}
+                skills={learnSkills}
+                tone="green"
+              />
+              <div className="flex flex-col justify-between rounded-2xl border border-[#D89216]/20 bg-white p-4 lg:min-w-56">
+                <div>
+                  <p className="text-sm font-semibold text-[#11201b]">Your match pool</p>
+                  <p className="mt-2 text-3xl font-bold text-[#11201b]">{filteredProfiles.length}</p>
+                  <p className="mt-1 text-xs text-slate-500">
+                    Based on {allSkills.length} saved skill{allSkills.length === 1 ? "" : "s"}.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={saveSkills}
+                  disabled={savingSkills || isPending}
+                  className="mt-4 min-h-11 rounded-full bg-[#11201b] px-5 text-sm font-semibold text-white transition hover:bg-[#11201b] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {savingSkills ? "Saving..." : "Save skills"}
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {filteredProfiles.length ? (
               filteredProfiles.map((profile) => (
                 <MatchCard
@@ -450,14 +478,11 @@ export default function DiscoverClient({ discover }) {
                 />
               ))
             ) : (
-              <div className="rounded-[28px] border border-dashed border-[#5BABF0]/30 bg-white px-6 py-14 text-center">
-                <p className="text-xl font-semibold text-[#1A3FA6]">
-                  {emptyQueryState ? "No matches fit these filters." : "No discover results yet."}
-                </p>
-                <p className="mt-2 text-sm text-[#5BABF0]">
-                  {emptyQueryState
-                    ? "Try a broader search, clear the skill filter, or turn off strong-match mode."
-                    : "Add both teaching and learning skills in your profile to unlock better matches."}
+              <div className="col-span-full rounded-3xl border border-dashed border-[#D89216]/30 bg-white px-6 py-14 text-center">
+                <p className="text-xl font-semibold text-[#11201b]">No matching swaps yet.</p>
+                <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-slate-500">
+                  Add skills like React, Next.js, Node.js, MongoDB, Python, or DSA
+                  to your teach and learn lists, then save to refresh matching people.
                 </p>
               </div>
             )}

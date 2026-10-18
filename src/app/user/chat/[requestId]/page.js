@@ -13,7 +13,7 @@ export default async function ChatPage({ params }) {
 
   if (result?.error) {
     return (
-      <main className="min-h-screen bg-[#F8F9FC] px-5 pb-16 pt-28">
+      <main className="min-h-screen bg-[#ffffff] px-5 pb-16 pt-28">
         <div className="mx-auto max-w-4xl">
           <div className="rounded-[24px] border border-dashed border-slate-300 bg-white px-6 py-10 text-center">
             <p className="text-lg font-medium text-slate-900">Chat unavailable</p>

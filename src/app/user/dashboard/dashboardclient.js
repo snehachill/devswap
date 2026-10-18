@@ -39,7 +39,7 @@ function Avatar({ name, image, initials, size = "lg" }) {
   };
   return (
     <div
-      className={`relative flex items-center justify-center rounded-full bg-[#5BABF0]/20 font-semibold text-[#5BABF0] shrink-0 ${sizes[size]}`}
+      className={`relative flex items-center justify-center rounded-full bg-[#D89216]/20 font-semibold text-[#8F5E00] shrink-0 ${sizes[size]}`}
     >
       {image ? (
         <Image
@@ -59,8 +59,8 @@ function Avatar({ name, image, initials, size = "lg" }) {
 // ─── Skill Pill ───────────────────────────────────────────────────────────────
 function SkillPill({ skill, tone = "mint" }) {
   const tones = {
-    mint:  "bg-[#5BABF0]/20 text-[#5BABF0]",
-    lilac: "bg-[#1A3FA6]/20 text-[#1A3FA6]",
+    mint:  "bg-[#D89216]/20 text-[#8F5E00]",
+    lilac: "bg-[#11201b]/20 text-[#11201b]",
   };
   return (
     <motion.span
@@ -84,7 +84,7 @@ function StatCard({ label, value, index }) {
     >
       {/* Animated top-left glow on hover */}
       <motion.div
-        className="absolute -top-10 -left-10 w-28 h-28 rounded-full bg-[#1A3FA6]/30 blur-2xl"
+        className="absolute -top-10 -left-10 w-28 h-28 rounded-full bg-[#11201b]/30 blur-2xl"
         initial={{ opacity: 0 }}
         whileHover={{ opacity: 1 }}
         transition={{ duration: 0.4 }}
@@ -104,7 +104,7 @@ function StatCard({ label, value, index }) {
 
       {/* Subtle corner accent */}
       <div className="absolute bottom-3 right-4 opacity-10 group-hover:opacity-20 transition-opacity">
-        <TrendingUp size={32} className="text-[#1A3FA6]/20" />
+        <TrendingUp size={32} className="text-[#11201b]/20" />
       </div>
     </motion.div>
   );
@@ -114,7 +114,7 @@ function StatCard({ label, value, index }) {
 function SectionTitle({ children, sub }) {
   return (
     <div className="mb-5">
-      <h2 className="text-[1.9rem] font-semibold tracking-tight text-[#1A3FA6] leading-tight">
+      <h2 className="text-[1.9rem] font-semibold tracking-tight text-[#11201b] leading-tight">
         {children}
       </h2>
       {sub && <p className="mt-1 text-sm text-slate-500">{sub}</p>}
@@ -131,7 +131,7 @@ function EmptyState({ title, description }) {
       transition={{ duration: 0.5, ease }}
       className="rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-6 py-10 text-center"
     >
-      <div className="w-12 h-12 rounded-2xl bg-[#1A3FA6] flex items-center justify-center mx-auto mb-4">
+      <div className="w-12 h-12 rounded-2xl bg-[#11201b] flex items-center justify-center mx-auto mb-4">
         <Zap size={20} className="text-slate-400" />
       </div>
       <p className="text-base font-semibold text-slate-900">{title}</p>
@@ -151,7 +151,7 @@ function MatchCard({ match, index }) {
     >
       {/* Left border accent that grows on hover */}
       <motion.div
-              className="absolute left-0 top-4 bottom-4 w-0.5 rounded-full bg-[#1A3FA6]"
+              className="absolute left-0 top-4 bottom-4 w-0.5 rounded-full bg-[#11201b]"
         initial={{ scaleY: 0, opacity: 0 }}
         whileHover={{ scaleY: 1, opacity: 1 }}
         transition={{ duration: 0.3, ease }}
@@ -176,7 +176,7 @@ function MatchCard({ match, index }) {
                   initial={{ opacity: 0, scale: 0.85 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.2 + index * 0.08, ease }}
-                  className="rounded-full border border-[#5BABF0]/30 bg-[#5BABF0]/10 px-3 py-0.5 text-[10px] uppercase tracking-[0.18em] text-[#5BABF0]"
+                  className="rounded-full border border-[#D89216]/30 bg-[#D89216]/10 px-3 py-0.5 text-[10px] uppercase tracking-[0.18em] text-[#8F5E00]"
                 >
                   {match.requestStatus}
                 </motion.span>
@@ -211,7 +211,7 @@ function MatchCard({ match, index }) {
 
         <Link
           href="/user/discover"
-          className="group/btn inline-flex h-11 items-center justify-center gap-2 rounded-2xl border border-[#1A3FA6]/30 px-6 text-[15px] font-medium text-[#1A3FA6] transition-all duration-200 hover:border-[#1A3FA6]/50 hover:bg-[#1A3FA6]/10 shrink-0 self-start md:self-auto"
+          className="group/btn inline-flex h-11 items-center justify-center gap-2 rounded-2xl border border-[#11201b]/30 px-6 text-[15px] font-medium text-[#11201b] transition-all duration-200 hover:border-[#11201b]/50 hover:bg-[#11201b]/10 shrink-0 self-start md:self-auto"
         >
           View
           <ArrowUpRight
@@ -231,12 +231,12 @@ function SkillsSection({ teachSkills, learnSkills }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.35, ease }}
-      className="rounded-3xl border border-[#5BABF0]/20 bg-white p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
+      className="rounded-3xl border border-[#D89216]/20 bg-white p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
     >
       {/* Teaching */}
       <div>
         <div className="flex items-center gap-2 mb-4">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#5BABF0]" />
+          <div className="w-1.5 h-1.5 rounded-full bg-[#D89216]" />
           <p className="text-[1.15rem] font-semibold text-slate-900">Teaching</p>
         </div>
         {teachSkills.length ? (
@@ -265,13 +265,13 @@ function SkillsSection({ teachSkills, learnSkills }) {
         animate={{ scaleX: 1 }}
         transition={{ duration: 0.6, delay: 0.5, ease }}
         style={{ transformOrigin: "left" }}
-        className="my-6 h-px bg-[#5BABF0]/20"
+        className="my-6 h-px bg-[#D89216]/20"
       />
 
       {/* Learning */}
       <div>
         <div className="flex items-center gap-2 mb-4">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#1A3FA6]" />
+          <div className="w-1.5 h-1.5 rounded-full bg-[#11201b]" />
           <p className="text-[1.15rem] font-semibold text-slate-900">Learning</p>
         </div>
         {learnSkills.length ? (
@@ -318,7 +318,7 @@ export default function DashboardClient({ dashboard }) {
             custom={0}
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 mb-4"
           >
-            <Sparkles size={12} className="text-[#1A3FA6]" />
+            <Sparkles size={12} className="text-[#11201b]" />
             <span className="text-[11px] font-semibold text-slate-600 uppercase tracking-[0.16em]">
               Your dashboard
             </span>
@@ -338,7 +338,7 @@ export default function DashboardClient({ dashboard }) {
                 animate={{ scaleX: 1 }}
                 transition={{ duration: 0.6, delay: 0.4, ease }}
                 style={{ transformOrigin: "left" }}
-                className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#5BABF0] rounded-full"
+                className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#D89216] rounded-full"
               />
             </span>
           </motion.p>

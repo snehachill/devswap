@@ -26,14 +26,14 @@ const NAV_LINKS = [
 function DevSwapLogo() {
   return (
     <Link href="/" className="group inline-flex items-center gap-3">
-      <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#1A3FA6] to-[#5BABF0] text-white shadow-md shadow-[#1A3FA6]/20">
+      <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#D89216] text-[#11201b]">
         <ArrowLeftRight size={16} />
       </span>
       <span
-        className="text-[1.4rem] font-medium tracking-tight text-slate-900 transition-colors duration-300"
-        style={{ fontFamily: "var(--font-dm-serif), serif" }}
+        className="text-[1.4rem] font-semibold tracking-tight text-[#11201b] transition-colors duration-300"
+        style={{ fontFamily: "var(--font-display), ui-sans-serif, system-ui, sans-serif" }}
       >
-        Dev<span className="text-[#1A3FA6]">Swap</span>
+        Dev<span className="text-[#8F5E00]">Swap</span>
       </span>
     </Link>
   );
@@ -44,13 +44,13 @@ function NavLink({ href, label, active, onClick }) {
     <Link
       href={href}
       onClick={onClick}
-      className={`group relative inline-flex items-center py-2 text-xs font-semibold uppercase tracking-[0.08em] transition-colors duration-300 ${
-        active ? "text-slate-900" : "text-slate-500 hover:text-[#1A3FA6]"
+      className={`group relative inline-flex items-center py-2 text-xs font-semibold uppercase tracking-[0.28em] transition-colors duration-300 ${
+        active ? "text-[#11201b]" : "text-[#72766f] hover:text-[#11201b]"
       }`}
     >
       {label}
       <span
-        className={`absolute bottom-0 left-0 h-0.5 rounded-full bg-[#1A3FA6] transition-all duration-300 ${
+        className={`absolute bottom-0 left-0 h-0.5 bg-[#D89216] transition-all duration-300 ${
           active ? "w-full" : "w-0 group-hover:w-full"
         }`}
       />
@@ -70,7 +70,7 @@ function Avatar({ user }) {
     : "?";
 
   return (
-    <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-[#1A3FA6] text-xs font-semibold text-white">
+    <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-[#D89216] text-xs font-semibold text-[#11201b]">
       {user?.image ? (
         <Image
           src={user.image}
@@ -87,10 +87,10 @@ function Avatar({ user }) {
 }
 
 function DropdownItem({ icon: Icon, label, href, onClick, danger = false }) {
-  const className = `flex w-full items-center gap-2.5 rounded-2xl px-3 py-2.5 text-sm transition-colors duration-300 ${
+  const className = `flex w-full items-center gap-2.5 rounded-full px-3 py-2.5 text-sm transition-colors duration-300 ${
     danger
       ? "text-rose-600 hover:bg-rose-50 hover:text-rose-700"
-      : "text-slate-600 hover:bg-[#1A3FA6]/10 hover:text-[#1A3FA6]"
+      : "text-[#72766f] hover:bg-[#ffffff] hover:text-[#11201b]"
   }`;
 
   if (href) {
@@ -122,15 +122,15 @@ function UserDropdown({ session, onClose }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 8 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="absolute right-0 top-full mt-3 w-64 rounded-3xl border border-[#5BABF0]/20 bg-white/95 p-3 shadow-[0_18px_50px_rgba(26,63,166,0.12)] backdrop-blur-xl"
+      className="absolute right-0 top-full mt-3 w-64 rounded-[28px] border border-[#e5e0d6] bg-white p-3 backdrop-blur-xl"
     >
-      <div className="flex items-center gap-3 rounded-[20px] bg-white/60 px-3 py-3">
+      <div className="flex items-center gap-3 rounded-[28px] bg-white/70 px-3 py-3">
         <Avatar user={session.user} />
         <div className="min-w-0">
-          <p className="truncate text-sm font-medium text-slate-900">
+          <p className="truncate text-sm font-medium text-[#11201b]">
             {session.user.name}
           </p>
-          <p className="truncate text-xs text-slate-500">{session.user.email}</p>
+          <p className="truncate text-xs text-[#72766f]">{session.user.email}</p>
         </div>
       </div>
 
@@ -140,7 +140,7 @@ function UserDropdown({ session, onClose }) {
         <DropdownItem icon={Home} label="Home" href="/" onClick={onClose} />
       </div>
 
-      <div className="mt-3 border-t border-[#5BABF0]/25 pt-3">
+      <div className="mt-3 border-t border-[#e5e0d6]/70 pt-3">
         <DropdownItem
           icon={LogOut}
           label="Sign Out"
@@ -164,7 +164,7 @@ function MobileMenu({ open, session, onClose }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="border-t border-[#5BABF0]/20 bg-white/95 px-5 pb-5 pt-4 backdrop-blur-[18px] md:hidden"
+          className="border-t border-[#e5e0d6] bg-white/95 px-5 pb-5 pt-4 backdrop-blur-[18px] md:hidden"
         >
           {!session ? (
             <nav className="flex flex-col gap-1">
@@ -180,21 +180,20 @@ function MobileMenu({ open, session, onClose }) {
             </nav>
           ) : null}
 
-
           <div className="mt-5 flex flex-col gap-3">
             {session ? (
               <>
                 <Link
                   href="/user/dashboard"
                   onClick={onClose}
-                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#1A3FA6] px-5 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-px hover:bg-[#4A90E8]"
+                  className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#e5e0d6] bg-white px-5 text-sm font-semibold uppercase tracking-[0.14em] text-[#11201b] transition-all duration-300 hover:bg-[#f4f5f7]"
                 >
                   Go To Dashboard
                 </Link>
                 <Link
                   href="/user/profile"
                   onClick={onClose}
-                  className="text-sm uppercase tracking-[0.06em] text-slate-500 transition-colors duration-300 hover:text-[#1A3FA6]"
+                  className="text-sm uppercase tracking-[0.14em] text-[#72766f] transition-colors duration-300 hover:text-[#11201b]"
                 >
                   Profile
                 </Link>
@@ -204,14 +203,14 @@ function MobileMenu({ open, session, onClose }) {
                 <Link
                   href="/sign-up"
                   onClick={onClose}
-                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#1A3FA6] px-5 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-px hover:bg-[#4A90E8]"
+                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#11201b] px-5 text-sm font-semibold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-[#263b34]"
                 >
                   Get Started
                 </Link>
                 <Link
                   href="/sign-in"
                   onClick={onClose}
-                  className="text-sm uppercase tracking-[0.06em] text-slate-500 transition-colors duration-300 hover:text-[#1A3FA6]"
+                  className="text-sm uppercase tracking-[0.14em] text-[#72766f] transition-colors duration-300 hover:text-[#11201b]"
                 >
                   Sign In
                 </Link>
@@ -254,7 +253,11 @@ export default function Navbar({ session }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  if (pathname?.includes("/sign-in") || pathname?.includes("/sign-up")) {
+  if (
+    pathname?.includes("/sign-in") ||
+    pathname?.includes("/sign-up") ||
+    pathname?.startsWith("/user/chat")
+  ) {
     return null;
   }
 
@@ -264,10 +267,10 @@ export default function Navbar({ session }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
       className="fixed inset-x-0 top-0 z-50 px-4 pt-3"
-      style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
+      style={{ fontFamily: "var(--font-text), ui-sans-serif, system-ui, sans-serif" }}
     >
-      <div className="mx-auto max-w-7xl rounded-2xl border border-white/70 bg-white/75 shadow-[0_12px_34px_rgba(26,63,166,0.10)] backdrop-blur-xl transition-all duration-300 ease-out">
-        <div className="mx-auto flex h-17 items-center justify-between px-5 sm:px-8 lg:px-12">
+      <div className="mx-auto max-w-7xl rounded-[28px] border border-[#e5e0d6] bg-white/95 shadow-[0_12px_34px_rgba(8,9,12,0.08)] backdrop-blur-xl transition-all duration-300 ease-out">
+        <div className="mx-auto flex h-16 items-center justify-between px-5 sm:px-8 lg:px-12">
           <div className={`min-w-0 items-center ${session ? "hidden sm:flex" : "flex"}`}>
             <DevSwapLogo />
           </div>
@@ -290,14 +293,14 @@ export default function Navbar({ session }) {
               <>
                 <Link
                   href="/user/requests"
-                  className="inline-flex min-h-10 items-center rounded-full border border-[#5BABF0]/30 bg-[#5BABF0]/10 px-4 text-sm font-medium text-[#5BABF0] transition-all duration-300 hover:-translate-y-px hover:bg-[#5BABF0]/20 sm:px-5"
+                  className="inline-flex min-h-10 items-center rounded-full border border-[#e5e0d6] bg-white px-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#11201b] transition-all duration-300 hover:bg-[#f4f5f7] sm:px-5"
                 >
                   Requests
                 </Link>
 
                 <Link
                   href="/user/discover"
-                  className="inline-flex min-h-10 items-center rounded-full bg-[#1A3FA6] px-4 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-px hover:bg-[#4A90E8] sm:px-5"
+                  className="inline-flex min-h-10 items-center rounded-full bg-[#11201b] px-4 text-sm font-semibold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:bg-[#263b34] sm:px-5"
                 >
                   Discover
                 </Link>
@@ -307,10 +310,10 @@ export default function Navbar({ session }) {
                     type="button"
                     suppressHydrationWarning
                     onClick={() => setShowDropdown((value) => !value)}
-                    className="inline-flex items-center gap-2 rounded-full px-1.5 py-1 transition-all duration-300 hover:bg-[#1A3FA6]/10"
+                    className="inline-flex items-center gap-2 rounded-none px-1.5 py-1 transition-all duration-300 hover:bg-[#ffffff]"
                   >
                     <Avatar user={session.user} />
-                    <ChevronDown size={15} className="text-slate-500" />
+                    <ChevronDown size={15} className="text-[#72766f]" />
                   </button>
 
                   <AnimatePresence>
@@ -324,13 +327,13 @@ export default function Navbar({ session }) {
               <>
                 <Link
                   href="/sign-in"
-                  className="hidden text-xs font-medium uppercase tracking-[0.06em] text-slate-500 transition-colors duration-300 hover:text-[#1A3FA6] sm:inline-flex"
+                  className="hidden text-xs font-semibold uppercase tracking-[0.18em] text-[#72766f] transition-colors duration-300 hover:text-[#11201b] sm:inline-flex"
                 >
                   Sign In
                 </Link>
                 <Link
                   href="/sign-up"
-                  className="hidden min-h-10 items-center rounded-full bg-[#1A3FA6] px-5 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-px hover:bg-[#4A90E8] sm:inline-flex"
+                  className="hidden min-h-10 items-center rounded-full bg-[#11201b] px-5 text-sm font-semibold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-[#263b34] sm:inline-flex"
                 >
                   Get Started
                 </Link>
@@ -342,7 +345,7 @@ export default function Navbar({ session }) {
               suppressHydrationWarning
               onClick={() => setMobileOpen((value) => !value)}
               aria-label="Toggle navigation"
-              className={`h-10 w-10 items-center justify-center rounded-full text-[#1A3FA6] transition-all duration-300 hover:bg-[#1A3FA6]/10 md:hidden ${
+              className={`h-10 w-10 items-center justify-center rounded-full border border-[#e5e0d6] text-[#11201b] transition-all duration-300 hover:bg-[#ffffff] md:hidden ${
                 session ? "hidden" : "inline-flex"
               }`}
             >
