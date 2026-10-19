@@ -3,6 +3,11 @@ import { redirect } from "next/navigation";
 import DiscoverClient from "./DiscoverClient";
 import { getDiscoverData } from "@/src/actions/user/discoveractions";
 
+export const metadata = {
+  title: "Discover Skill Swap Partners",
+  description: "Explore developer profiles and find people whose skills complement what you want to learn.",
+};
+
 export default async function DiscoverPage() {
   const discover = await getDiscoverData();
 

@@ -2,6 +2,11 @@ import { redirect } from "next/navigation";
 import { getDashboardData } from "@/src/actions/user/dashboardaction";
 import DashboardClient from "./dashboardclient";
 
+export const metadata = {
+  title: "Skill Swap Dashboard",
+  description: "See your current skill swaps, recent activity, and progress in your DevSwap dashboard.",
+};
+
 export default async function DashboardPage() {
   const dashboard = await getDashboardData();
 

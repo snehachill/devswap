@@ -1,3 +1,11 @@
+export const metadata = {
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: { index: false, follow: false },
+  },
+};
+
 export default function AuthLayout({ children }) {
   return (
     <div className="min-h-screen bg-white text-slate-900">

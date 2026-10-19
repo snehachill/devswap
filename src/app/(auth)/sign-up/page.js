@@ -1,19 +1,10 @@
-"use client";
+import SignUpPageClient from "./SignUpPageClient";
 
-import { useSyncExternalStore } from "react";
-
-import SignUpForm from "./SignUpForm";
-
-function subscribe() {
-  return () => {};
-}
+export const metadata = {
+  title: "Create an Account",
+  description: "Create your free DevSwap profile to meet developers, share your skills, and start learning through skill swaps.",
+};
 
 export default function SignUpPage() {
-  const mounted = useSyncExternalStore(subscribe, () => true, () => false);
-
-  if (!mounted) {
-    return null;
-  }
-
-  return <SignUpForm />;
+  return <SignUpPageClient />;
 }

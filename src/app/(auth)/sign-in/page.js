@@ -1,19 +1,10 @@
-"use client";
+import SignInPageClient from "./SignInPageClient";
 
-import { useSyncExternalStore } from "react";
-
-import SignInForm from "./SignInForm";
-
-function subscribe() {
-  return () => {};
-}
+export const metadata = {
+  title: "Sign In",
+  description: "Sign in to DevSwap to continue your skill exchanges, conversations, and learning progress.",
+};
 
 export default function SignInPage() {
-  const mounted = useSyncExternalStore(subscribe, () => true, () => false);
-
-  if (!mounted) {
-    return null;
-  }
-
-  return <SignInForm />;
+  return <SignInPageClient />;
 }

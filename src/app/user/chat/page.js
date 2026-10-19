@@ -2,6 +2,11 @@ import SwapsChatClient from "./SwapsChatClient";
 import { getSwapsChatPageData } from "@/src/actions/user/chatactions";
 import { redirect } from "next/navigation";
 
+export const metadata = {
+  title: "Your Chats",
+  description: "Open your conversations with skill swap partners on DevSwap.",
+};
+
 export default async function SwapsChatPage({ searchParams }) {
   const params = await searchParams;
   const swapId = typeof params?.swap === "string" ? params.swap : "";

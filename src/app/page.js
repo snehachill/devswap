@@ -1,6 +1,25 @@
 import Link from "next/link";
 import { ArrowLeftRight, ArrowRight, Check, Sparkles } from "lucide-react";
 
+export const metadata = {
+  title: "Trade Skills and Learn With Developers",
+  description: "Find developers to exchange skills with. Share what you know, learn something new, and make progress together on DevSwap.",
+  ...((process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_SITE_URL)
+    ? { alternates: { canonical: "/" } }
+    : {}),
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "DevSwap",
+  description: "A peer-to-peer skill exchange platform for developers to teach and learn together.",
+  inLanguage: "en",
+  ...((process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_SITE_URL)
+    ? { url: process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_SITE_URL }
+    : {}),
+};
+
 const steps = [
   { number: "01", title: "Share what you know", text: "Add the skills you can teach and the ones you’re curious to learn." },
   { number: "02", title: "Meet your match", text: "Find someone with complementary skills and a shared appetite to grow." },
@@ -41,6 +60,7 @@ function SwapCard({ name, initial, role, skill, tint }) {
 export default function Page() {
   return (
     <div data-page="landing" className="overflow-hidden bg-[#ffffff] text-[#11201b]">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
       <section id="top" className="relative isolate flex min-h-[700px] w-full items-center justify-center overflow-hidden bg-[#11201b] px-6 pb-20 pt-32 text-white sm:px-10 lg:px-14 lg:pt-36">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
           <div className="hero-orbit absolute left-1/2 top-[48%] aspect-square w-[min(86vw,760px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/[0.07]" />

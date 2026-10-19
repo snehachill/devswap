@@ -3,6 +3,11 @@ import { redirect } from "next/navigation";
 import RequestsClient from "./RequestsClient";
 import { getRequestsData } from "@/src/actions/user/requestactions";
 
+export const metadata = {
+  title: "Your Skill Swap Requests",
+  description: "Review and manage the skill exchange requests you have sent and received on DevSwap.",
+};
+
 export default async function RequestsPage() {
   const requests = await getRequestsData();
 
