@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 :root {
+  --font-text: var(--font-display);
   --font-dm-serif: var(--font-display);
-  --font-dm-sans: var(--font-text);
+  --font-dm-sans: var(--font-display);
   --color-canvas: #ffffff;
   --color-canvas-warm: #ffffff;
   --color-surface: #ffffff;
@@ -18,7 +19,7 @@
   --radius-card: 24px;
   --radius-pill: 9999px;
   color-scheme: light;
-  font-family: var(--font-text), sans-serif;
+  font-family: var(--font-display), sans-serif;
 }
 
 html {
@@ -31,7 +32,7 @@ body {
   min-height: 100vh;
   background: #ffffff;
   color: var(--color-ink);
-  font-family: var(--font-text), sans-serif;
+  font-family: var(--font-display), sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -42,6 +43,30 @@ body {
 }
 
 .font-display { font-family: var(--font-display), Georgia, serif; }
+
+@keyframes hero-orbit {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes hero-orbit-reverse {
+  to { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+
+@keyframes hero-breathe {
+  0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(0.96); }
+  50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.04); }
+}
+
+@keyframes hero-drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+.hero-orbit { animation: hero-orbit 90s linear infinite; }
+.hero-orbit-reverse { animation: hero-orbit-reverse 75s linear infinite; }
+.hero-breathe { animation: hero-breathe 9s ease-in-out infinite; }
+.hero-drift { animation: hero-drift 6s ease-in-out infinite; }
+.hero-drift-delayed { animation: hero-drift 7.5s ease-in-out -3s infinite; }
 
 h1, h2, h3, h4, h5, h6, strong {
   font-family: var(--font-display), Georgia, serif;

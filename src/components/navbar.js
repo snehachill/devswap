@@ -266,17 +266,17 @@ export default function Navbar({ session }) {
       initial={{ opacity: 0, y: -18 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="fixed inset-x-0 top-0 z-50 px-4 pt-3"
+      className="fixed inset-x-0 top-0 z-50"
       style={{ fontFamily: "var(--font-text), ui-sans-serif, system-ui, sans-serif" }}
     >
-      <div className="mx-auto max-w-7xl rounded-[28px] border border-[#e5e0d6] bg-white/95 shadow-[0_12px_34px_rgba(8,9,12,0.08)] backdrop-blur-xl transition-all duration-300 ease-out">
-        <div className="mx-auto flex h-16 items-center justify-between px-5 sm:px-8 lg:px-12">
+      <div className="border-b border-[#e5e0d6] bg-white/95 shadow-[0_3px_14px_rgba(17,32,27,0.045)] backdrop-blur-xl transition-all duration-300 ease-out">
+        <div className="mx-auto flex h-[58px] max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-14">
           <div className={`min-w-0 items-center ${session ? "hidden sm:flex" : "flex"}`}>
             <DevSwapLogo />
           </div>
 
           {!session ? (
-            <nav className="hidden items-center gap-8 md:flex">
+            <nav className="hidden items-center gap-7 md:flex">
               {NAV_LINKS.map((item) => (
                 <NavLink
                   key={item.label}
@@ -293,14 +293,14 @@ export default function Navbar({ session }) {
               <>
                 <Link
                   href="/user/requests"
-                  className="inline-flex min-h-10 items-center rounded-full border border-[#e5e0d6] bg-white px-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#11201b] transition-all duration-300 hover:bg-[#f4f5f7] sm:px-5"
+                  className="inline-flex min-h-9 items-center rounded-lg border border-[#e5e0d6] bg-white px-3.5 text-xs font-semibold uppercase tracking-[0.1em] text-[#11201b] transition-all duration-200 hover:border-[#D89216]/50 hover:bg-[#fffaf2] sm:px-4"
                 >
                   Requests
                 </Link>
 
                 <Link
                   href="/user/discover"
-                  className="inline-flex min-h-10 items-center rounded-full bg-[#11201b] px-4 text-sm font-semibold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:bg-[#263b34] sm:px-5"
+                  className="inline-flex min-h-9 items-center rounded-lg bg-[#11201b] px-3.5 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all duration-200 hover:bg-[#263b34] sm:px-4"
                 >
                   Discover
                 </Link>
@@ -327,13 +327,13 @@ export default function Navbar({ session }) {
               <>
                 <Link
                   href="/sign-in"
-                  className="hidden text-xs font-semibold uppercase tracking-[0.18em] text-[#72766f] transition-colors duration-300 hover:text-[#11201b] sm:inline-flex"
+                  className="hidden text-[11px] font-semibold uppercase tracking-[0.14em] text-[#72766f] transition-colors duration-200 hover:text-[#11201b] sm:inline-flex"
                 >
                   Sign In
                 </Link>
                 <Link
                   href="/sign-up"
-                  className="hidden min-h-10 items-center rounded-full bg-[#11201b] px-5 text-sm font-semibold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-[#263b34] sm:inline-flex"
+                  className="hidden min-h-9 items-center rounded-lg bg-[#11201b] px-4 text-xs font-semibold uppercase tracking-[0.12em] text-white transition-all duration-200 hover:bg-[#263b34] sm:inline-flex"
                 >
                   Get Started
                 </Link>
@@ -345,7 +345,7 @@ export default function Navbar({ session }) {
               suppressHydrationWarning
               onClick={() => setMobileOpen((value) => !value)}
               aria-label="Toggle navigation"
-              className={`h-10 w-10 items-center justify-center rounded-full border border-[#e5e0d6] text-[#11201b] transition-all duration-300 hover:bg-[#ffffff] md:hidden ${
+              className={`h-9 w-9 items-center justify-center rounded-lg border border-[#e5e0d6] text-[#11201b] transition-all duration-200 hover:bg-[#fffaf2] md:hidden ${
                 session ? "hidden" : "inline-flex"
               }`}
             >
