@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { ArrowLeftRight, ArrowRight, Check, Sparkles } from "lucide-react";
+import { getPublicSiteUrl } from "@/src/lib/siteUrl";
+
+const siteUrl = getPublicSiteUrl();
 
 export const metadata = {
   title: "Trade Skills and Learn With Developers",
   description: "Find developers to exchange skills with. Share what you know, learn something new, and make progress together on DevSwap.",
-  ...((process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_SITE_URL)
-    ? { alternates: { canonical: "/" } }
-    : {}),
+  ...(siteUrl ? { alternates: { canonical: "/" } } : {}),
 };
 
 const websiteSchema = {
@@ -15,9 +16,7 @@ const websiteSchema = {
   name: "DevSwap",
   description: "A peer-to-peer skill exchange platform for developers to teach and learn together.",
   inLanguage: "en",
-  ...((process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_SITE_URL)
-    ? { url: process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_SITE_URL }
-    : {}),
+  ...(siteUrl ? { url: siteUrl } : {}),
 };
 
 const steps = [

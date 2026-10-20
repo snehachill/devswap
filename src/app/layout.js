@@ -2,8 +2,9 @@ import "./globals.css";
 import { auth } from "@/auth";
 import localFont from "next/font/local";
 import Navbar from "@/src/components/navbar";
+import { getPublicSiteUrl } from "@/src/lib/siteUrl";
 
-const siteUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_SITE_URL;
+const siteUrl = getPublicSiteUrl();
 const siteTitle = "DevSwap | Learn and trade skills with developers";
 const siteDescription = "Trade skills with developers. Teach what you know, learn something new, and grow together through thoughtful one-to-one skill swaps.";
 

@@ -1,4 +1,6 @@
-const siteUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_SITE_URL;
+import { getPublicSiteUrl } from "@/src/lib/siteUrl";
+
+const siteUrl = getPublicSiteUrl();
 
 export default function sitemap() {
   if (!siteUrl) return [];
